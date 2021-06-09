@@ -31,8 +31,8 @@ public class StudentsController {
     @PostMapping(path = "/students",consumes = "application/json")
     public ResponseEntity<Students> addStudents(@RequestBody Students students) {
         try {
-            //controllo
-            System.out.println("\n post mapping \n ");
+            //inserire controllo mail
+            //System.out.println("\n post mapping \n ");
             Students _students = studentsRepository.save(new Students(students.getName(),students.getSurname(),students.getEmail()));
             return new ResponseEntity<>(_students,HttpStatus.CREATED);
         }
