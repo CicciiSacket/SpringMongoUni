@@ -17,6 +17,8 @@ public class Students {
     @Field
     private String email;
 
+    public Students(){}
+
     public Students(String name,String surname,String email) {
         this.name = name;
         this.surname = surname;
@@ -50,6 +52,7 @@ public class Students {
     public void setEmail(String email) {
         this.email = email;
     }
+
     public String getEmail() {
         return email;
     }
