@@ -1,4 +1,4 @@
-package com.aihto.Models;
+package com.aitho.Models;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -7,22 +7,17 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
 @Document(collection = "UniversityDB")
-public class Students {
+public class Course {
     @Id
     private String id;
     @Field
     private String name;
     @Field
-    private String surname;
-    @Field
-    private String email;
+    private Integer maxCFU;
 
-    public Students(){}
-
-    public Students(String name,String surname,String email) {
+    public Course(String name,Integer maxCFU) {
         this.name = name;
-        this.surname = surname;
-        this.email = email;
+        this.maxCFU = maxCFU;
     }
 
     public String getId() {
@@ -41,20 +36,7 @@ public class Students {
         this.name = name;
     }
 
-    public String getSurname() {
-        return surname;
-    }
+    public Integer getmaxCFU() { return maxCFU;  }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
+    public void setmaxCFU(Integer CFU) { this.maxCFU = CFU; }
 }

@@ -1,10 +1,8 @@
-package com.aihto.Controller;
+package com.aitho.Controller;
 
-import com.aihto.Models.Students;
-import com.aihto.Repository.StudentsRepository;
-import org.bson.types.ObjectId;
+import com.aitho.Models.Students;
+import com.aitho.Repository.StudentsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +23,7 @@ public class StudentsController {
     }
 
     @GetMapping("/students")
-    public List<Students> getAllStudents() {
-        return studentsRepository.findAll();
-    }
+    public List<Students> getAllStudents() { return studentsRepository.findAll(); }
 
     @PostMapping(path = "/students",consumes = "application/json")
     public ResponseEntity<Students> addStudents(@RequestBody Students students) {

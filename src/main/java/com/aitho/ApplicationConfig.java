@@ -1,4 +1,4 @@
-package com.aihto;
+package com.aitho;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
