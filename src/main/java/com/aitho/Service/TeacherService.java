@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TeacherService {
@@ -21,6 +22,17 @@ public class TeacherService {
     }
 
     public List<Teacher> getAllTeachers() { return teacherRepository.findAll(); }
+
+    public ResponseEntity<Teacher> getTeacher(@RequestBody Teacher teacher) {
+        Optional<Teacher> _teacher = teacherRepository.findById(teacher.getId());
+        if(_teacher.isPresent()){
+            return new ResponseEntity<>(_teacher.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
+
+
+
 
     public ResponseEntity<Teacher> addTeacher(@RequestBody Teacher teacher) {
         try {
