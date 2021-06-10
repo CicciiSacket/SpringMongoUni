@@ -1,13 +1,14 @@
 package com.aitho.Controller;
 
 import com.aitho.Repository.CourseRepository;
+import com.aitho.Service.CourseService;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class CourseController {
-    private final CourseRepository courseRepository;
+    private final CourseService courseService;
 
-    public CourseController(CourseRepository courseRepository) {
-        this.courseRepository = courseRepository;
+    public CourseController(CourseService courseService) {
+        this.courseService = courseService;
     }
 }

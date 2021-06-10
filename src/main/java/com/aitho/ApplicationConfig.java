@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Configuration
-@EnableMongoRepositories(basePackages= "com.aihto")
+@EnableMongoRepositories(basePackages= "com.aitho")
 public class ApplicationConfig extends AbstractMongoClientConfiguration {
 
     @Autowired
