@@ -1,6 +1,6 @@
-package com.aihto.Repository;
+package com.aitho.Repository;
 
-import com.aihto.Models.Students;
+import com.aitho.Models.Students;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

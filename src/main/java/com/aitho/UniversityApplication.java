@@ -1,6 +1,6 @@
-package com.aihto;
+package com.aitho;
 
-import com.aihto.Repository.StudentsRepository;
+import com.aitho.Repository.StudentsRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
