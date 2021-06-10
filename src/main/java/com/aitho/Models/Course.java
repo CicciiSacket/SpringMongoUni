@@ -7,20 +7,17 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
 @Document(collection = "UniversityDB")
-public class Teacher {
+public class Course {
     @Id
     private String id;
     @Field
     private String name;
     @Field
-    private String surname;
-    @Field
-    private String email;
+    private Integer maxCFU;
 
-    public Teacher(String name,String surname,String email) {
+    public Course(String name,Integer maxCFU) {
         this.name = name;
-        this.surname = surname;
-        this.email = email;
+        this.maxCFU = maxCFU;
     }
 
     public String getId() {
@@ -39,18 +36,7 @@ public class Teacher {
         this.name = name;
     }
 
-    public String getSurname() { return surname; }
+    public Integer getmaxCFU() { return maxCFU;  }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
+    public void setmaxCFU(Integer CFU) { this.maxCFU = CFU; }
 }
