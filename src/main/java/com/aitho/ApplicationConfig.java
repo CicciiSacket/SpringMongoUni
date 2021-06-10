@@ -38,7 +38,7 @@ public class ApplicationConfig extends AbstractMongoClientConfiguration {
 
     @Override
     protected Collection<String> getMappingBasePackages() {
-        return Collections.singleton("com.aihto");
+        return Collections.singleton("com.aitho");
     }
 }
 
