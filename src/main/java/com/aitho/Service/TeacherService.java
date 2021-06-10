@@ -1,5 +1,6 @@
 package com.aitho.Service;
 
+import com.aitho.Models.Course;
 import com.aitho.Models.Teacher;
 import com.aitho.Repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,9 @@ public class TeacherService {
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
-
-
+    public Optional<Teacher> findTeacherById(String id){
+        return teacherRepository.findById(id);
+    }
 
     public ResponseEntity<Teacher> addTeacher(@RequestBody Teacher teacher) {
         try {
