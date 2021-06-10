@@ -1,6 +1,8 @@
 package com.aitho.Service;
 
 import com.aitho.Models.Course;
+import com.aitho.Models.Students;
+import com.aitho.Models.Teacher;
 import com.aitho.Models.Valutation;
 import com.aitho.Repository.ValutationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +34,17 @@ public class ValutationService {
 
     public ResponseEntity<Valutation> addValutation(@RequestBody Valutation valutation) {
         try{
-            Course course = courseService.findCourseById(valutation.getId_course()).get();
-            teacherService.findTeacherById(valutation.getId_teacher()).get();
-            //Placeholder studente
-            if (valutation.getCFU() <= course.getmaxCFU() && valutation.getCFU() >= course.getMinCFU() ){
+            Optional<Course> course = courseService.findCourseById(valutation.getId_course());
+            Optional<Teacher> teacher = teacherService.findTeacherById(valutation.getId_teacher());
+            Optional<Students> student = studentService.searchStudents(valutation.getId_student());
+            if ( course.isPresent() && teacher.isPresent() && student.isPresent() &&
+                (valutation.getCFU() <= course.get().getmaxCFU() && valutation.getCFU() >= course.get().getMinCFU())){
+                valutationRepository.save(valutation);
                 return new ResponseEntity<>(valutation, HttpStatus.CREATED);
             }
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }catch (Exception e ){
+            System.out.printf(e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

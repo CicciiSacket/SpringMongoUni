@@ -19,7 +19,7 @@ public class Valutation {
     @Field
     private Integer CFU;
 
-    public Valutation(String id_course, String id_student,String id_teacher,Integer CFU) {
+    public Valutation(String id_course, String id_student, String id_teacher, Integer CFU) {
         this.CFU = CFU;
         this.id_course = id_course;
         this.id_student = id_student;
