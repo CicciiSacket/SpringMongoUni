@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Document(collection = "UniversityDB")
 public class Students {
     @Id
-    private String Id;
+    private String id;
     @Field
     private String name;
     @Field
@@ -26,11 +26,11 @@ public class Students {
     }
 
     public String getId() {
-        return Id;
+        return id;
     }
 
     public void setId(String id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getName() {

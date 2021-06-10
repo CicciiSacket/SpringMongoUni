@@ -2,7 +2,9 @@ package com.aihto.Controller;
 
 import com.aihto.Models.Students;
 import com.aihto.Repository.StudentsRepository;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,28 +43,15 @@ public class StudentsController {
 
     @PutMapping(path = "/students/{id}",consumes = "application/json")
     public ResponseEntity<Students> updateStudents(@PathVariable("id") String id, @RequestBody Students students) {
-        System.out.println(students.getId());
-        System.out.println(id);
-        if(studentsRepository.findAll().contains(students)){
-            System.out.println("porcoddio cosi va bene ");
-        }
-        if(id == students.getId()) {
-            System.out.println("porcoddio cosi va bene ");
-        }
         Optional<Students> _students = studentsRepository.findById(id);
+        System.out.println("\n" + _students + "\n");
         if (_students.isPresent()) {
             System.out.println("\n YY \n");
             Students _student = _students.get();
             _student.setEmail(students.getEmail());
-            return new ResponseEntity<>(studentsRepository.save(_student),HttpStatus.OK);
-        }
-        else {
+            return new ResponseEntity<>(studentsRepository.save(_student), HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-
-
-
-
 }
