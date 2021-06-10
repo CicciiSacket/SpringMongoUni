@@ -22,18 +22,22 @@ public class StudentService {
         this.studentsRepository = studentsRepository;
     }
 
-    public List<Students> getAllStudents() { return studentsRepository.findAll(); }
+    public List<Students> getAllStudents() {
+        return studentsRepository.findAll();
+    }
 
     public ResponseEntity<Students> addStudents(@RequestBody Students students) {
         try {
-            //inserire controllo mail
-            //System.out.println("\n post mapping \n ");
-            Students _students = studentsRepository.save(new Students(students.getName(),students.getSurname(),students.getEmail()));
+            Students _students = studentsRepository.save(new Students(students.getName(), students.getSurname(), students.getEmail()));
             return new ResponseEntity<>(_students, HttpStatus.CREATED);
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public Optional<Students> searchStudents(@PathVariable("id") String id) {
+        Optional<Students> _students = studentsRepository.findById(id);
+        return _students;
     }
 
     public ResponseEntity<Students> updateStudents(@PathVariable("id") String id, @RequestBody Students students) {
@@ -47,15 +51,15 @@ public class StudentService {
         }
     }
 
-    public ResponseEntity<HttpStatus> deleteStudents(@RequestBody String id) {
-        try {
-            studentsRepository.deleteById(id);
-            System.out.println(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        catch (Exception e) {
+    public ResponseEntity<HttpStatus> deleteStudents(@RequestBody Students student) {
+        Optional<Students> _students = studentsRepository.findById(student.getId());
+        if (_students.isPresent()) {
+            String _student = _students.get().getId();
+            studentsRepository.deleteById(_student);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
 }
+
