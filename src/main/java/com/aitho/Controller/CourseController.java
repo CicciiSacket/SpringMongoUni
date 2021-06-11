@@ -31,4 +31,9 @@ public class CourseController {
     public ResponseEntity<Course> addCoruse(@RequestBody Course course) {
         return  courseService.addCourse(course);
     }
+
+    @PutMapping(path = "/courses/{id}",consumes = "application/json")
+    public ResponseEntity<Course> upgradeCourse (@PathVariable("id") String id,@RequestBody Course course) {
+        return courseService.updateCourse(id,course);
+    }
 }

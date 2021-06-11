@@ -15,11 +15,12 @@ public class Course {
     @Field
     private Integer maxCFU;
     @Field
-    private final Integer minCFU = 18;
+    private Integer minCFU;
 
     public Course(String name, Integer maxCFU) {
         this.name = name;
         this.maxCFU = maxCFU;
+        this.minCFU = 18;
     }
 
     public String getId() {
