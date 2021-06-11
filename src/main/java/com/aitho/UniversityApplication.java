@@ -17,14 +17,5 @@ public class UniversityApplication  {
 		SpringApplication.run(UniversityApplication.class, args);
 	}
 
-//	@Override
-//	public void run(String... args) throws Exception {
-//		if(studentsRepository.findAll().isEmpty()) {
-//			studentsRepository.save(new Students(0,"Ciccio"));
-//		}
-//		for (Students students : studentsRepository.findAll()) {
-//			System.out.println("students");
-//		}
-//	}
 }
   
