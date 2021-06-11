@@ -32,6 +32,12 @@ public class ValutationService {
 
     public List<Valutation> getAllValutations() { return valutationRepository.findAll(); }
 
+    public List<Valutation> getStudentValutations(String id) { return valutationRepository.findStudentValutations(id); }
+
+    public List<Valutation> getTeacherValutations(String id){return valutationRepository.findTeacherValutations(id);}
+
+    public List<Valutation> getCourseValutations(String id){return valutationRepository.findCourseValutations(id);}
+
     public ResponseEntity<Valutation> addValutation(@RequestBody Valutation valutation) {
         try{
             Optional<Course> course = courseService.findCourseById(valutation.getId_course());
