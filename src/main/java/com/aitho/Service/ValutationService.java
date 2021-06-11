@@ -35,16 +35,15 @@ public class ValutationService {
     public ResponseEntity<Valutation> addValutation(@RequestBody Valutation valutation) {
         try{
             Optional<Course> course = courseService.findCourseById(valutation.getId_course());
-            Optional<Teacher> teacher = teacherService.findTeacherById(valutation.getId_teacher());
-            Optional<Students> student = studentService.searchStudents(valutation.getId_student());
-            if ( course.isPresent() && teacher.isPresent() && student.isPresent() &&
+            Boolean teacher = teacherService.existTeacherById(valutation.getId_teacher());
+            Boolean student = studentService.existStudentById(valutation.getId_student());
+            if ( course.isPresent() && teacher && student &&
                 (valutation.getCFU() <= course.get().getmaxCFU() && valutation.getCFU() >= course.get().getMinCFU())){
                 valutationRepository.save(valutation);
                 return new ResponseEntity<>(valutation, HttpStatus.CREATED);
             }
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }catch (Exception e ){
-            System.out.printf(e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -24,6 +24,8 @@ public class CourseService {
 
     public List<Course> getAllCourses() { return courseRepository.findAll(); }
 
+    public Boolean existCourseById(String id) {return courseRepository.existsById(id); }
+
     public ResponseEntity<Course> addCourse(@RequestBody Course course) {
         try {
             Course _course = courseRepository.save(course);

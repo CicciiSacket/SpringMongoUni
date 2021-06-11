@@ -24,6 +24,8 @@ public class TeacherService {
 
     public List<Teacher> getAllTeachers() { return teacherRepository.findAll(); }
 
+    public Boolean existTeacherById(String id) {return teacherRepository.existsById(id);}
+
     public ResponseEntity<Teacher> getTeacher(@RequestBody Teacher teacher) {
         Optional<Teacher> _teacher = teacherRepository.findById(teacher.getId());
         if(_teacher.isPresent()){

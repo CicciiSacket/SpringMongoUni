@@ -26,6 +26,8 @@ public class StudentService {
         return studentsRepository.findAll();
     }
 
+    public Boolean existStudentById(String id) { return studentsRepository.existsById(id); }
+
     public ResponseEntity<Students> addStudents(@RequestBody Students students) {
         try {
             Students _students = studentsRepository.save(new Students(students.getName(), students.getSurname(), students.getEmail()));
