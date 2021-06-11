@@ -36,6 +36,8 @@ public class ValutationService {
 
     public List<Valutation> getTeacherValutations(String id){return valutationRepository.findTeacherValutations(id);}
 
+    public List<Valutation> getCourseValutations(String id){return valutationRepository.findCourseValutations(id);}
+
     public ResponseEntity<Valutation> addValutation(@RequestBody Valutation valutation) {
         try{
             Optional<Course> course = courseService.findCourseById(valutation.getId_course());

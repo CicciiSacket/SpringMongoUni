@@ -14,4 +14,7 @@ public interface ValutationRepository extends MongoRepository<Valutation,String 
     @Query("{id_teacher : ?0}")
     List<Valutation> findTeacherValutations(String id);
 
+    @Query("{id_course : ?0}")
+    List<Valutation> findCourseValutations(String id);
+
 }
