@@ -27,6 +27,9 @@ public class ValutationController {
     @GetMapping("/valutations/student/{id}")
     public List<Valutation> getStudentValutations(@PathVariable("id") String id) { return  valutationService.getStudentValutations(id); }
 
+    @GetMapping("/valutations/teacher/{id}")
+    public List<Valutation> getTeacherValutations(@PathVariable("id") String id) { return  valutationService.getTeacherValutations(id); }
+
     @PostMapping(path = "/valutations",consumes = "application/json")
     public ResponseEntity<Valutation> addValutation(@RequestBody Valutation valutation) {
         return valutationService.addValutation(valutation);
