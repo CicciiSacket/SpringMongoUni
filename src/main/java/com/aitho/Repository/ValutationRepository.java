@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
+@Repository
 public interface ValutationRepository extends MongoRepository<Valutation,String > {
 
     @Query("{id_student : ?0}")
