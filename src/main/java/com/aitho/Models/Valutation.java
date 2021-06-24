@@ -17,13 +17,13 @@ public class Valutation {
     @Field
     private String id_teacher;
     @Field
-    private Integer CFU;
+    private Integer vote;
 
-    public Valutation(String id_course, String id_student, String id_teacher, Integer CFU) {
-        this.CFU = CFU;
+    public Valutation(String id_course, String id_student, String id_teacher, Integer vote) {
         this.id_course = id_course;
         this.id_student = id_student;
         this.id_teacher = id_teacher;
+        this.vote = vote;
     }
 
 
@@ -55,11 +55,11 @@ public class Valutation {
         this.id_teacher = id_teacher;
     }
 
-    public Integer getCFU() {
-        return CFU;
+    public Integer getVote() {
+        return vote;
     }
 
-    public void setCFU(Integer CFU) {
-        this.CFU = CFU;
+    public void setVote(Integer vote) {
+        this.vote = vote;
     }
 }

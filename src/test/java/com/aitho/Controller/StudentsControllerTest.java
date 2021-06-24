@@ -52,17 +52,17 @@ public class StudentsControllerTest {
                 .andExpect(status().isCreated());
     }
 
-    //incompleto
-    @Test
-    public void updateStudentTest() throws Exception {
-        var mario = new Students("mario","rossi","email");
-        mario.setId("marioooo");
-        ObjectMapper result = new ObjectMapper();
-        String trueResult = result.writeValueAsString(mario);
-        this.mockMvc.perform(put("/students/{id}","60c21cfd9b3db31a7a02bcef").contentType(MediaType.APPLICATION_JSON).content(trueResult))
-                .andDo(print())
-                .andExpect(status().isNoContent());
-    }
+//    //incompleto
+//    @Test
+//    public void updateStudentTest() throws Exception {
+//        var mario = new Students("mario","rossi","email");
+//        mario.setId("marioooo");
+//        ObjectMapper result = new ObjectMapper();
+//        String trueResult = result.writeValueAsString(mario);
+//        this.mockMvc.perform(put("/students/{id}","60c21cfd9b3db31a7a02bcef").contentType(MediaType.APPLICATION_JSON).content(trueResult))
+//                .andDo(print())
+//                .andExpect(status().isNoContent());
+//    }
 
 
 

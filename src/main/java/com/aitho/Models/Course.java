@@ -13,14 +13,11 @@ public class Course {
     @Field
     private String name;
     @Field
-    private Integer maxCFU;
-    @Field
-    private Integer minCFU;
+    private Integer CFU;
 
-    public Course(String name, Integer maxCFU) {
+    public Course(String name, Integer CFU) {
         this.name = name;
-        this.maxCFU = maxCFU;
-        this.minCFU = 18;
+        this.CFU = CFU;
     }
 
     public String getId() {
@@ -39,11 +36,8 @@ public class Course {
         this.name = name;
     }
 
-    public Integer getmaxCFU() { return maxCFU;  }
+    public Integer getCFU() { return CFU;  }
 
-    public void setmaxCFU(Integer CFU) { this.maxCFU = CFU; }
+    public void setCFU(Integer CFU) { this.CFU = CFU; }
 
-    public Integer getMinCFU() {
-        return minCFU;
-    }
 }

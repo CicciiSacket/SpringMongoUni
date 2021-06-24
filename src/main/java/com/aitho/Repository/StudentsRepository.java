@@ -8,10 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface StudentsRepository extends MongoRepository< Students,String >{
+public interface StudentsRepository extends MongoRepository< Students,String > {
 
     @Query("{email : ?0}")
     Optional<Students> findStudentByEmail(String email);
-
 
 };

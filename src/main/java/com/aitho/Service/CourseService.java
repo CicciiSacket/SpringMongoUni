@@ -48,20 +48,20 @@ public class CourseService {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    public ResponseEntity<Course> updateCourse(@PathVariable("id") String id,@RequestBody Course course) {
-        Optional<Course> courseUpgrade = courseRepository.findById(id);
-        if (courseUpgrade.isPresent()) {
-            Course _courseUpgrade = courseUpgrade.get();
-            _courseUpgrade.setName(course.getName());
-            if (course.getmaxCFU() != courseUpgrade.get().getmaxCFU()) {
-                _courseUpgrade.setmaxCFU(course.getmaxCFU());
-            }
-            return new ResponseEntity<>(courseRepository.save(_courseUpgrade),HttpStatus.NO_CONTENT);
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+//    public ResponseEntity<Course> updateCourse(@PathVariable("id") String id,@RequestBody Course course) {
+//        Optional<Course> courseUpgrade = courseRepository.findById(id);
+//        if (courseUpgrade.isPresent()) {
+//            Course _courseUpgrade = courseUpgrade.get();
+//            _courseUpgrade.setName(course.getName());
+//            if (course.getmaxCFU() != courseUpgrade.get().getmaxCFU()) {
+//                _courseUpgrade.setmaxCFU(course.getmaxCFU());
+//            }
+//            return new ResponseEntity<>(courseRepository.save(_courseUpgrade),HttpStatus.NO_CONTENT);
+//        }
+//        else {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
 
 
 }
