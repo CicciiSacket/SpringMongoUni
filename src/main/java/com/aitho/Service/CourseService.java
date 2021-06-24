@@ -1,6 +1,7 @@
 package com.aitho.Service;
 
 import com.aitho.Models.Course;
+import com.aitho.Models.Students;
 import com.aitho.Repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,20 +49,28 @@ public class CourseService {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-//    public ResponseEntity<Course> updateCourse(@PathVariable("id") String id,@RequestBody Course course) {
-//        Optional<Course> courseUpgrade = courseRepository.findById(id);
-//        if (courseUpgrade.isPresent()) {
-//            Course _courseUpgrade = courseUpgrade.get();
-//            _courseUpgrade.setName(course.getName());
-//            if (course.getmaxCFU() != courseUpgrade.get().getmaxCFU()) {
-//                _courseUpgrade.setmaxCFU(course.getmaxCFU());
-//            }
-//            return new ResponseEntity<>(courseRepository.save(_courseUpgrade),HttpStatus.NO_CONTENT);
-//        }
-//        else {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
+    public ResponseEntity<Course> updateCourse(@PathVariable("id") String id,@RequestBody Course course) {
+        Optional<Course> courseUpgrade = courseRepository.findById(id);
+        if (courseUpgrade.isPresent()) {
+            Course _courseUpgrade = courseUpgrade.get();
+            _courseUpgrade.setCFU(course.getCFU());
+            return new ResponseEntity<>(courseRepository.save(_courseUpgrade),HttpStatus.NO_CONTENT);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public ResponseEntity<HttpStatus> deleteCourse(@RequestBody Course course) {
+        Optional<Course> _course = courseRepository.findById( course.getId());
+        if (_course.isPresent()) {
+            String _student = _course.get().getId();
+            courseRepository.deleteById(_student);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 
 }

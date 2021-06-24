@@ -1,5 +1,6 @@
 package com.aitho.Controller;
 
+import com.aitho.Models.Course;
 import com.aitho.Models.Students;
 import com.aitho.Models.Teacher;
 import com.aitho.Models.Valutation;
@@ -33,8 +34,18 @@ public class ValutationController {
     @GetMapping("/valutations/course/{id}")
     public List<Valutation> getCourseValutations(@PathVariable("id") String id) { return  valutationService.getCourseValutations(id); }
 
-//    @PostMapping(path = "/valutations",consumes = "application/json")
-//    public ResponseEntity<Valutation> addValutation(@RequestBody Valutation valutation) {
-//        return valutationService.addValutation(valutation);
-//    }
+    @PostMapping(path = "/valutations",consumes = "application/json")
+    public ResponseEntity<Valutation> addValutation(@RequestBody Valutation valutation) {
+        return valutationService.addValutation(valutation);
+    }
+
+    @PutMapping(path = "/valutation/{id}",consumes = "application/json")
+    public ResponseEntity<Valutation> upgradeCourse (@PathVariable("id") String id, @RequestBody Valutation valutation) {
+        return valutationService.updateValutation(id,valutation);
+    }
+
+    @DeleteMapping(path = "/valutation",consumes = "application/json")
+    public ResponseEntity<HttpStatus> deleteCourse(@RequestBody Valutation valutation) {
+        return valutationService.deleteValutation(valutation);
+    }
 }

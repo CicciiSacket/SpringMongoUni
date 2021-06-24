@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
@@ -38,19 +39,42 @@ public class ValutationService {
 
     public List<Valutation> getCourseValutations(String id){return valutationRepository.findCourseValutations(id);}
 
-//    public ResponseEntity<Valutation> addValutation(@RequestBody Valutation valutation) {
-//        try{
-//            Optional<Course> course = courseService.findCourseById(valutation.getId_course());
-//            Boolean teacher = teacherService.existTeacherById(valutation.getId_teacher());
-//            Boolean student = studentService.existStudentById(valutation.getId_student());
-//            if ( course.isPresent() && teacher && student &&
-//                (valutation.getCFU() <= course.get().getmaxCFU() && valutation.getCFU() >= course.get().getMinCFU())){
-//                valutationRepository.save(valutation);
-//                return new ResponseEntity<>(valutation, HttpStatus.CREATED);
-//            }
-//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }catch (Exception e ){
-//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
+    public ResponseEntity<Valutation> addValutation(@RequestBody Valutation valutation) {
+        try{
+            Optional<Course> course = courseService.findCourseById(valutation.getId_course());
+            Boolean teacher = teacherService.existTeacherById(valutation.getId_teacher());
+            Boolean student = studentService.existStudentById(valutation.getId_student());
+            if ( course.isPresent() && teacher && student){
+                valutationRepository.save(valutation);
+                return new ResponseEntity<>(valutation, HttpStatus.CREATED);
+            }
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }catch (Exception e ){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public ResponseEntity<Valutation> updateValutation(@PathVariable("id") String id, @RequestBody Valutation valutation) {
+        Optional<Valutation> valutationUpgrade = valutationRepository.findById(id);
+        if (valutationUpgrade.isPresent()) {
+            Valutation _valutationUpgrade = valutationUpgrade.get();
+            _valutationUpgrade.setVote(valutation.getVote());
+            return new ResponseEntity<>(valutationRepository.save(_valutationUpgrade),HttpStatus.NO_CONTENT);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public ResponseEntity<HttpStatus> deleteValutation(@RequestBody Valutation valutation) {
+        Optional<Valutation> _valutation = valutationRepository.findById( valutation.getId());
+        if (_valutation.isPresent()) {
+            String valutationId = _valutation.get().getId();
+            valutationRepository.deleteById(valutationId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

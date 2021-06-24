@@ -5,6 +5,7 @@ import com.aitho.Models.Students;
 import com.aitho.Repository.CourseRepository;
 import com.aitho.Service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,8 +33,13 @@ public class CourseController {
         return  courseService.addCourse(course);
     }
 
-//    @PutMapping(path = "/courses/{id}",consumes = "application/json")
-//    public ResponseEntity<Course> upgradeCourse (@PathVariable("id") String id,@RequestBody Course course) {
-//        return courseService.updateCourse(id,course);
-//    }
+    @PutMapping(path = "/courses/{id}",consumes = "application/json")
+    public ResponseEntity<Course> upgradeCourse (@PathVariable("id") String id,@RequestBody Course course) {
+        return courseService.updateCourse(id,course);
+    }
+
+    @DeleteMapping(path = "/courses",consumes = "application/json")
+    public ResponseEntity<HttpStatus> deleteCourse(@RequestBody Course course) {
+        return courseService.deleteCourse(course);
+    }
 }
