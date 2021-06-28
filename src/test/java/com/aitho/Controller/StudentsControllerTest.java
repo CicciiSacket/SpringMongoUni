@@ -41,16 +41,16 @@ public class StudentsControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    public void addStudentTest() throws Exception {
-        var mario = new Students("mario","rossi","email");
-        mario.setId("marioooo");
-        ObjectMapper result = new ObjectMapper();
-        String trueResult = result.writeValueAsString(mario);
-        this.mockMvc.perform(post("/students").contentType(MediaType.APPLICATION_JSON).content(trueResult))
-                .andDo(print())
-                .andExpect(status().isCreated());
-    }
+//    @Test
+//    public void addStudentTest() throws Exception {
+//        var mario = new Students("mario","rossi","email");
+//        mario.setId("marioooo");
+//        ObjectMapper result = new ObjectMapper();
+//        String trueResult = result.writeValueAsString(mario);
+//        this.mockMvc.perform(post("/students").contentType(MediaType.APPLICATION_JSON).content(trueResult))
+//                .andDo(print())
+//                .andExpect(status().isCreated());
+//    }
 
 //    //incompleto
 //    @Test

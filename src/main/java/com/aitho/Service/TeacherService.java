@@ -39,15 +39,15 @@ public class TeacherService {
         return teacherRepository.findById(id);
     }
 
-    public ResponseEntity<Teacher> addTeacher(@RequestBody Teacher teacher) {
-        try {
-            Teacher _teacher = teacherRepository.save(new Teacher(teacher.getName(),teacher.getSurname(),teacher.getEmail()));
-            return new ResponseEntity<>(_teacher, HttpStatus.CREATED);
-        }
-        catch(Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    public ResponseEntity<Teacher> addTeacher(@RequestBody Teacher teacher) {
+//        try {
+//            Teacher _teacher = teacherRepository.save(new Teacher(teacher.getName(),teacher.getSurname(),teacher.getEmail()));
+//            return new ResponseEntity<>(_teacher, HttpStatus.CREATED);
+//        }
+//        catch(Exception e) {
+//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
     public ResponseEntity<Teacher> updateTeacher(@PathVariable("id") String id, @RequestBody Teacher teacher) {
         Optional<Teacher> teacherUpgrade = teacherRepository.findById(id);

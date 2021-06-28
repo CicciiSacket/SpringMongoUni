@@ -2,6 +2,8 @@ package com.aitho.Service;
 
 import com.aitho.Models.Students;
 import com.aitho.Repository.StudentsRepository;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +32,8 @@ public class StudentService {
 
     public ResponseEntity<Students> addStudents(@RequestBody Students students) {
         try {
-            Students _students = studentsRepository.save(new Students(Students.super.getName(), students.getSurname(), students.getEmail()));
+            students.setToken(JWT.create().withSubject(students.getEmail()).sign(Algorithm.HMAC512(students.getPassword())));
+            Students _students = studentsRepository.save(new Students(students.getName(), students.getSurname(), students.getEmail(), students.getPassword(), students.getToken()));
             return new ResponseEntity<>(_students, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -38,8 +41,7 @@ public class StudentService {
     }
 
     public Optional<Students> searchStudents(@PathVariable("id") String id) {
-        Optional<Students> _students = studentsRepository.findById(id);
-        return _students;
+        return studentsRepository.findById(id);
     }
 
     public ResponseEntity<Students> updateStudents(@PathVariable("id") String id, @RequestBody Students students) {

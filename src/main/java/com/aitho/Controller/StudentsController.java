@@ -1,6 +1,7 @@
 package com.aitho.Controller;
 
 import com.aitho.Models.Students;
+import com.aitho.Repository.StudentsRepository;
 import com.aitho.Service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,10 +16,12 @@ import java.util.Optional;
 public class StudentsController {
 
     private final StudentService studentService;
+    private final StudentsRepository studentsRepository;
 
     @Autowired
-    public StudentsController(StudentService studentService) {
+    public StudentsController(StudentService studentService, StudentsRepository studentsRepository) {
         this.studentService = studentService;
+        this.studentsRepository = studentsRepository;
     }
 
     @GetMapping("/students")
@@ -29,6 +32,9 @@ public class StudentsController {
 
     @PostMapping(path = "/students",consumes = "application/json")
     public ResponseEntity<Students> addStudents(@RequestBody Students students) {
+        if(studentsRepository.findStudentByEmail(students.getEmail()).isPresent()){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         return  studentService.addStudents(students);
     }
 
