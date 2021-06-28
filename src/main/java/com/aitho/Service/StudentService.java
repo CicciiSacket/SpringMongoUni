@@ -30,7 +30,7 @@ public class StudentService {
 
     public ResponseEntity<Students> addStudents(@RequestBody Students students) {
         try {
-            Students _students = studentsRepository.save(new Students(students.getName(), students.getSurname(), students.getEmail()));
+            Students _students = studentsRepository.save(new Students(Students.super.getName(), students.getSurname(), students.getEmail()));
             return new ResponseEntity<>(_students, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

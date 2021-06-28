@@ -41,7 +41,7 @@ public class CourseService {
         return courseRepository.findById(id);
     }
 
-    public ResponseEntity<Course> findCourseByName(@PathVariable("name") String name){
+    public ResponseEntity<Course> findCourseByName(@PathVariable("name") String name) {
         Optional<Course> _course = courseRepository.findCourseByName(name);
         if(_course.isPresent()){
             return new ResponseEntity<>(_course.get(), HttpStatus.OK);

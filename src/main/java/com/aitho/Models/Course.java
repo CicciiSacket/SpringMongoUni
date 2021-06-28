@@ -19,25 +19,4 @@ public class Course {
         this.name = name;
         this.CFU = CFU;
     }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getCFU() { return CFU;  }
-
-    public void setCFU(Integer CFU) { this.CFU = CFU; }
-
 }
