@@ -11,17 +11,17 @@ import java.util.List;
 
 
 @RestController
-public class Login {
+public class LoginController {
 
     private final LoginService loginService;
 
     @Autowired
-    public Login(LoginService loginService) {
+    public LoginController(LoginService loginService) {
         this.loginService = loginService;
     }
 
-    @PostMapping(path = "/login/",consumes = "application/json")
-    public List<Valutation> loginStudents(@RequestBody Students students ) { //login studente, vede le sue valutazione
+    @PostMapping(path = "/login",consumes = "application/json")
+    public String loginStudents(@RequestBody Students students ) {
         return loginService.loginStudents(students);
     }
 

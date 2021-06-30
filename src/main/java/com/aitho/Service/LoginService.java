@@ -2,6 +2,8 @@ package com.aitho.Service;
 
 import com.aitho.Models.Students;
 import com.aitho.Models.Valutation;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,11 +27,12 @@ public class LoginService {
         this.valutationService = valutationService;
     }
 
-    public List<Valutation> loginStudents(@RequestBody Students students ) { //login studente, vede le sue valutazione
+    public String loginStudents(@RequestBody Students students ) {
         if(studentsService.existStudentById(students.getId()) == true) {
             Optional<Students> logged = studentsService.searchStudents(students.getId());
-            if(students.getPassword() == logged.get().getPassword()){
-                return valutationService.getStudentValutations(students.getId());
+            if(students.getPassword().equals(logged.get().getPassword())){
+                logged.get().setToken(JWT.create().withSubject(students.getEmail()).sign(Algorithm.HMAC512(students.getPassword())));
+                return logged.get().getToken();
             }
         }
         return null;
