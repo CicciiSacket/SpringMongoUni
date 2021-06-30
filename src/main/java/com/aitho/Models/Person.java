@@ -16,7 +16,6 @@ public class Person {
     private String email;
     @Field
     private Role role;
-    protected enum Role { Admin, Teacher, Student }
     @Field
     private String password;
     @Field

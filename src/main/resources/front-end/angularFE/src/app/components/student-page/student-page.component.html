@@ -1,1 +1,8 @@
-<p>student-page works!</p>
+<div *ngIf="valutations?.length != 0">
+    <ul>
+        <li *ngFor="let valutation of valutations">
+            <p>{{valutation.vote}}</p>
+        </li>
+
+    </ul>
+</div>

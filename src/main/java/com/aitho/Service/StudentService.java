@@ -44,6 +44,10 @@ public class StudentService {
         return studentsRepository.findById(id);
     }
 
+    public Optional<Students> searchStudentByEmail(@PathVariable("email") String email) {
+        return studentsRepository.findStudentByEmail(email);
+    }
+
     public ResponseEntity<Students> updateStudents(@PathVariable("id") String id, @RequestBody Students students) {
         Optional<Students> _students = studentsRepository.findById(id);
         if (_students.isPresent()) {

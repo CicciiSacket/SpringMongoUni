@@ -9,5 +9,5 @@ export interface Student {
 
 
 export interface StudentRes{
-    response: Student[],
+    token: string,
 }
