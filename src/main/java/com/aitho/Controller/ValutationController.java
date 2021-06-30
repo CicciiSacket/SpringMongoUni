@@ -45,7 +45,7 @@ public class ValutationController {
     }
 
     @DeleteMapping(path = "/valutation",consumes = "application/json")
-    public ResponseEntity<HttpStatus> deleteCourse(@RequestBody Valutation valutation) {
+    public ResponseEntity<HttpStatus> deleteValutation(@RequestBody Valutation valutation) {
         return valutationService.deleteValutation(valutation);
     }
 }
