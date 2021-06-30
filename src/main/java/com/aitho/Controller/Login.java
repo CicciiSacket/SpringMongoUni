@@ -20,12 +20,12 @@ public class Login {
         this.loginService = loginService;
     }
 
-    @PostMapping(path = "/login/students",consumes = "application/json")
+    @PostMapping(path = "/login/",consumes = "application/json")
     public List<Valutation> loginStudents(@RequestBody Students students ) { //login studente, vede le sue valutazione
         return loginService.loginStudents(students);
     }
 
-    // @PostMapping(path = "/login/teachers",consumes = "application/json")
+    // @PostMapping(path = "/login/",consumes = "application/json")
     // public ResponseEntity<> loginTeachers(@RequestBody Teacher teachers ) { //login insegnante OK --> FE
     //     Boolean logged = teacherService.existsById(id);
     //     if(logged == true) {
