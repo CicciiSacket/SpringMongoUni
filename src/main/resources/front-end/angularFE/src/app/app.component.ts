@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { StudentRes } from './interface/student';
+import { Student, StudentRes } from './interface/student';
 import { StudentService } from './services/student.service'
 
 @Component({
@@ -9,7 +9,8 @@ import { StudentService } from './services/student.service'
 })
 export class AppComponent {
   title = 'angularFE';
-  studentsList: StudentRes | undefined;
+  studentsList: Student[] | undefined;
+
 
   constructor(private studentService: StudentService){
 

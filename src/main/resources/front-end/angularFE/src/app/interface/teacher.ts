@@ -1,4 +1,4 @@
-export interface Student {    
+export interface Teacher {    
     name: string,
     surname: string,
     email: string,
@@ -8,6 +8,5 @@ export interface Student {
 }
 
 
-export interface StudentRes{
-    response: Student[],
+export interface TeacherRes{
 }

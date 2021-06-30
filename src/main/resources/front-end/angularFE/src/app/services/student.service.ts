@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { StudentRes } from '../interface/student';
+import { Student, StudentRes } from '../interface/student';
 
 @Injectable({
   providedIn: 'root'
@@ -12,9 +12,6 @@ export class StudentService {
 
   constructor(private client: HttpClient, private router: Router) { }
 
-  getAllStudents = async (): Promise<StudentRes> => {
-
-    return await this.client.get(this.uriStudent).toPromise() as Promise<StudentRes>
-
-  }
+  getAllStudents = async (): Promise<Student[]> => await this.client.get(this.uriStudent).toPromise() as Promise<Student[]>
+  
 }
