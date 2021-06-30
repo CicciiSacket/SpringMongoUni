@@ -19,6 +19,8 @@ import { SignupPageComponent } from './components/signup-page/signup-page.compon
 import { MatFormFieldModule } from '@angular/material/form-field'; 
 import { MatInputModule } from '@angular/material/input'; 
 import { MatRadioModule } from '@angular/material/radio';
+import { StudentPageComponent } from './components/student-page/student-page.component';
+import { TeacherPageComponent } from './components/teacher-page/teacher-page.component';
 
 
 @NgModule({
@@ -26,7 +28,9 @@ import { MatRadioModule } from '@angular/material/radio';
     AppComponent,
     LoginPageComponent,
     NavbarComponent,
-    SignupPageComponent
+    SignupPageComponent,
+    StudentPageComponent,
+    TeacherPageComponent
   ],
   imports: [
     HttpClientModule,
