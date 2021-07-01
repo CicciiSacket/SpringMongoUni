@@ -1,8 +1,13 @@
 <div *ngIf="valutations?.length != 0">
-    <ul>
-        <li *ngFor="let valutation of valutations">
-            <p>{{valutation.vote}}</p>
-        </li>
-
-    </ul>
+    <mat-list *ngFor="let course of courses">
+         <div mat-subheader>Corso: {{course.name}}</div>
+        <mat-divider></mat-divider>
+        <mat-list-item *ngFor="let valutation of mappedValutations[course.id]">
+            <div mat-line>Voto: {{valutation.vote}}/{{course.CFU}}</div>
+            <div mat-line>Professore: {{valutation.id_teacher}}</div>
+            <mat-divider></mat-divider>
+        </mat-list-item> 
+    </mat-list>
 </div>
+
+<button (click)="fakeData()">Create fake data</button>

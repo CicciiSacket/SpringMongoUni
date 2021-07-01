@@ -5,3 +5,8 @@ export interface Valutation {
     id_teacher: string;
     vote: number;
 }
+
+
+export interface MappedValutation {    
+    [key: string]: Valutation[];
+}

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthServiceService } from 'src/app/services/auth-service.service';
+import { DataShareService } from 'src/app/services/data-share.service';
 
 @Component({
   selector: 'app-login-page',
@@ -11,7 +12,7 @@ export class LoginPageComponent implements OnInit {
   public email: string = "";
   public password: string = "";
   public role : string = "";
-  constructor(private authServiceService: AuthServiceService, private router: Router) { }
+  constructor(private authServiceService: AuthServiceService,private dataShareService: DataShareService, private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -23,6 +24,8 @@ export class LoginPageComponent implements OnInit {
           localStorage.setItem("token", response.token);
           localStorage.setItem("role", this.role);
           localStorage.setItem("email", this.email);
+          this.dataShareService.getUserRole.next(this.role)
+          this.dataShareService.isUserLoggedIn.next(true)
           this.router.navigate(['/student'])
         }else{
           alert("Hai sbagliato bro ripova :)")
@@ -30,10 +33,6 @@ export class LoginPageComponent implements OnInit {
       })
     }else if(this.role == "Teacher"){
     }
-
-
-
-
   }
 
 }

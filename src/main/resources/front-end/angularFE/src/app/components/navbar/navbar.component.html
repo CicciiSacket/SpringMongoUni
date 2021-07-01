@@ -13,6 +13,9 @@
         <li class="nav-item">
           <a class="nav-link text-light" routerLink='/signup'>Sign Up</a>
         </li>
+        <li *ngIf="logged"class="nav-item">
+          <a class="nav-link text-light" routerLink='/{{role}}'>You</a>
+        </li>
       </ul>
         <ul class="navbar-nav ms-auto">
         <li class="nav-item">
