@@ -22,10 +22,10 @@ public class TeacherController {
     @GetMapping("/teachers")
     public List<Teacher> getAllTeachers() { return teacherService.getAllTeachers(); }
 
-//   @PostMapping(path = "/teachers",consumes = "application/json")
-//   public ResponseEntity<Teacher> addTeacher(@RequestBody Teacher teacher) {
-//      return teacherService.addTeacher(teacher);
-//   }
+   @PostMapping(path = "/teachers",consumes = "application/json")
+   public ResponseEntity<Teacher> addTeacher(@RequestBody Teacher teacher) {
+      return teacherService.addTeacher(teacher);
+   }
 
     @PutMapping(path = "/teachers/{id}",consumes = "application/json")
     public ResponseEntity<Teacher> upgradeTeachers(@PathVariable("id") String id, @RequestBody Teacher teacher) {

@@ -26,7 +26,7 @@ public class LoginController {
         this.loginService = loginService;
     }
 
-    @PostMapping(path = "/login",consumes = "application/json")
+    @PostMapping(path = "/login/students",consumes = "application/json")
     public ResponseEntity<String> loginStudents(@RequestBody Authentication auth) {
         JSONObject resp = new JSONObject();
         try {
@@ -38,26 +38,28 @@ public class LoginController {
         return new ResponseEntity<>(resp.toString(), HttpStatus.OK);
     }
 
-    // @PostMapping(path = "/login/",consumes = "application/json")
-    // public ResponseEntity<> loginTeachers(@RequestBody Teacher teachers ) { //login insegnante OK --> FE
-    //     Boolean logged = teacherService.existsById(id);
-    //     if(logged == true) {
-    //         if(teachers.getPassword() == logged.getPassword()){
-    //             return new ResponseEntity<>(null, HttpStatus.OK);
-    //         }
-    //     }
-    //     return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-    // } 
+    @PostMapping(path = "/login/teachers",consumes = "application/json")
+    public ResponseEntity<String> loginTeachers(@RequestBody Authentication auth) {
+        JSONObject resp = new JSONObject();
+        try {
+            resp.put("token", loginService.loginTeacher(auth));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return new ResponseEntity<>(resp.toString(), HttpStatus.OK);
+    }
 
-    // @PostMapping(path = "/login/admin",consumes = "application/json")
-    // public ResponseEntity<> loginTeachers(@RequestBody Admin admin ) { //login ADMIN OK --> FE
-    //     Boolean logged = adminService.existAdminById(id);
-    //     if(logged == true){
-    //         if(admin.getPassword() == logged.getPassword()){
-    //             return new ResponseEntity<>(null, HttpStatus.OK);
-    //         }
-    //     }
-    //     return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-    // } 
+    @PostMapping(path = "/login/admin",consumes = "application/json")
+    public ResponseEntity<String> loginAdmins(@RequestBody Authentication auth) {
+        JSONObject resp = new JSONObject();
+        try {
+            resp.put("token", loginService.loginAdmin(auth));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return new ResponseEntity<>(resp.toString(), HttpStatus.OK);
+    }
 
 }

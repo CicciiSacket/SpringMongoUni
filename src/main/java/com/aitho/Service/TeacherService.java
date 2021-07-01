@@ -1,8 +1,11 @@
 package com.aitho.Service;
 
 import com.aitho.Models.Course;
+import com.aitho.Models.Students;
 import com.aitho.Models.Teacher;
 import com.aitho.Repository.TeacherRepository;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +30,10 @@ public class TeacherService {
 
     public Boolean existTeacherById(String id) {return teacherRepository.existsById(id);}
 
+    public Optional<Teacher> searchTeacherByEmail(@PathVariable("email") String email) {
+        return teacherRepository.findTeacherByEmail(email);
+    }
+
     public ResponseEntity<Teacher> getTeacher(@RequestBody Teacher teacher) {
         Optional<Teacher> _teacher = teacherRepository.findById(teacher.getId());
         if(_teacher.isPresent()){
@@ -39,15 +46,15 @@ public class TeacherService {
         return teacherRepository.findById(id);
     }
 
-//    public ResponseEntity<Teacher> addTeacher(@RequestBody Teacher teacher) {
-//        try {
-//            Teacher _teacher = teacherRepository.save(new Teacher(teacher.getName(),teacher.getSurname(),teacher.getEmail()));
-//            return new ResponseEntity<>(_teacher, HttpStatus.CREATED);
-//        }
-//        catch(Exception e) {
-//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
+    public ResponseEntity<Teacher> addTeacher(@RequestBody Teacher teacher) {
+        try {
+            teacher.setToken(JWT.create().withSubject(teacher.getEmail()).sign(Algorithm.HMAC512(teacher.getPassword())));
+            Teacher _teachers = teacherRepository.save(new Teacher(teacher.getName(), teacher.getSurname(), teacher.getEmail(), teacher.getPassword(), teacher.getToken()));
+            return new ResponseEntity<>(_teachers , HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     public ResponseEntity<Teacher> updateTeacher(@PathVariable("id") String id, @RequestBody Teacher teacher) {
         Optional<Teacher> teacherUpgrade = teacherRepository.findById(id);
