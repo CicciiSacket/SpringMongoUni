@@ -1,7 +1,5 @@
 package com.aitho.Service;
 
-import com.aitho.Models.Course;
-import com.aitho.Models.Students;
 import com.aitho.Models.Teacher;
 import com.aitho.Repository.TeacherRepository;
 import com.auth0.jwt.JWT;
@@ -12,9 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 public class TeacherService {
@@ -36,10 +36,7 @@ public class TeacherService {
 
     public ResponseEntity<Teacher> getTeacher(@RequestBody Teacher teacher) {
         Optional<Teacher> _teacher = teacherRepository.findById(teacher.getId());
-        if(_teacher.isPresent()){
-            return new ResponseEntity<>(_teacher.get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        return _teacher.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     public Optional<Teacher> findTeacherById(String id){
@@ -77,6 +74,10 @@ public class TeacherService {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    public Stream<Teacher> teachersById (@RequestHeader List<String> id ) {
+       return teacherRepository.findAll().stream().filter(teacher -> id.contains(teacher.getId()));
     }
 
 
