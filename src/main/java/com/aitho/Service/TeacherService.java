@@ -1,6 +1,7 @@
 package com.aitho.Service;
 
 import com.aitho.Models.Course;
+import com.aitho.Models.Students;
 import com.aitho.Models.Teacher;
 import com.aitho.Repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,10 @@ public class TeacherService {
     public List<Teacher> getAllTeachers() { return teacherRepository.findAll(); }
 
     public Boolean existTeacherById(String id) {return teacherRepository.existsById(id);}
+
+    public Optional<Teacher> searchTeacherByEmail(@PathVariable("email") String email) {
+        return teacherRepository.findTeacherByEmail(email);
+    }
 
     public ResponseEntity<Teacher> getTeacher(@RequestBody Teacher teacher) {
         Optional<Teacher> _teacher = teacherRepository.findById(teacher.getId());
