@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @RestController
 public class TeacherController {
@@ -21,6 +23,11 @@ public class TeacherController {
 
     @GetMapping("/teachers")
     public List<Teacher> getAllTeachers() { return teacherService.getAllTeachers(); }
+
+    @GetMapping("/teacherstest")
+    public ResponseEntity<Stream<Teacher>> test(@RequestHeader List<String> id) {
+        return new ResponseEntity<>(teacherService.teachersById(id), HttpStatus.OK);
+    }
 
    @PostMapping(path = "/teachers",consumes = "application/json")
    public ResponseEntity<Teacher> addTeacher(@RequestBody Teacher teacher) {
