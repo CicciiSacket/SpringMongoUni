@@ -76,8 +76,8 @@ public class TeacherService {
         }
     }
 
-    public Stream<Teacher> teachersById (@RequestHeader List<String> id ) {
-       return teacherRepository.findAll().stream().filter(teacher -> id.contains(teacher.getId()));
+    public List<Teacher> teachersById (@RequestHeader List<String> id ) {
+       return teacherRepository.findAll().stream().filter(teacher -> id.contains(teacher.getId())).collect(Collectors.toList());
     }
 
 
