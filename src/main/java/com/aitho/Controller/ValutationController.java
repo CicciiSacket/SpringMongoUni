@@ -27,11 +27,7 @@ public class ValutationController {
     public List<Valutation> getAllValutations() { return valutationService.getAllValutations(); }
 
     @GetMapping("/valutations/student")
-    public List<Valutation> getStudentValutations(
-            @RequestHeader(value="email") String email,
-            @RequestHeader(value="role") String role,
-            @RequestHeader(value="token") String token
-            ) {
+    public List<Valutation> getStudentValutations(@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
         if(Role.valueOf(role) == Role.Student) {
             Optional<Students> authStudent = studentService.searchStudentByEmail(email);
             if(authStudent.isPresent() && authStudent.get().getToken().equals(token)){

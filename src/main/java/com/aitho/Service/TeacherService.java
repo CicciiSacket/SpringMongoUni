@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -76,8 +77,8 @@ public class TeacherService {
         }
     }
 
-    public Stream<Teacher> teachersById (@RequestHeader List<String> id ) {
-       return teacherRepository.findAll().stream().filter(teacher -> id.contains(teacher.getId()));
+    public List<Teacher> teachersById (@RequestHeader List<String> id ) {
+       return teacherRepository.findAll().stream().filter(teacher -> id.contains(teacher.getId())).collect(Collectors.toList());
     }
 
 

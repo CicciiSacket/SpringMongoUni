@@ -25,7 +25,7 @@ public class TeacherController {
     public List<Teacher> getAllTeachers() { return teacherService.getAllTeachers(); }
 
     @GetMapping("/teacherstest")
-    public ResponseEntity<Stream<Teacher>> test(@RequestHeader List<String> id) {
+    public ResponseEntity<List<Teacher>> test(@RequestHeader List<String> id) {
         return new ResponseEntity<>(teacherService.teachersById(id), HttpStatus.OK);
     }
 
