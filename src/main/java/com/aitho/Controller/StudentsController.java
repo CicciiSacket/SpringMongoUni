@@ -2,6 +2,7 @@ package com.aitho.Controller;
 
 import com.aitho.Models.Students;
 import com.aitho.Repository.StudentsRepository;
+import com.aitho.Service.CheckController;
 import com.aitho.Service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,15 +18,22 @@ public class StudentsController {
 
     private final StudentService studentService;
     private final StudentsRepository studentsRepository;
+    private final CheckController checkController;
 
     @Autowired
-    public StudentsController(StudentService studentService, StudentsRepository studentsRepository) {
+    public StudentsController(StudentService studentService, StudentsRepository studentsRepository, CheckController checkController) {
         this.studentService = studentService;
         this.studentsRepository = studentsRepository;
+        this.checkController = checkController;
     }
 
     @GetMapping("/students")
-    public List<Students> getAllStudents() { return studentService.getAllStudents(); }
+    public ResponseEntity<List<Students>> getAllStudents(@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        if (checkController.checkLoginTeacher(email,role,token)) {
+            return new ResponseEntity<>(studentService.getAllStudents(),HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
 
     @GetMapping("/students/{id}")
     public Optional<Students> searchStudent(@PathVariable("id") String id) { return studentService.searchStudents(id);}
