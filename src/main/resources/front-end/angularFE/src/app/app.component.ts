@@ -17,15 +17,5 @@ export class AppComponent {
   }
 
   ngOnInit(): void{
-    this.getStudents();
-    
   }
-
-  async getStudents(): Promise<void> {
-    this.studentsList = await this.studentService.getAllStudents();
-  }
-
-
-
-
 }
