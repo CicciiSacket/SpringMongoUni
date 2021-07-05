@@ -18,10 +18,18 @@ export class StudentPageComponent implements OnInit {
   ngOnInit(): void {
     this.studentService.getStudentValutations().then(valutations =>{
       this.dataShareService.isUserLoggedIn.next(true)
+      console.log(valutations)
       if (valutations.length > 0 ){
         this.valutations = valutations
+        this.courseService.getCoursesById(this.mappedValutationsKeys).then(courses =>{
+          console.log(courses)
+          if(courses.length > 0){
+            this.courses = courses
+          }
+        })
       }
     })
+    
   }
 
   fakeData = (): void =>{
@@ -72,26 +80,6 @@ export class StudentPageComponent implements OnInit {
     },
     {
       id: "id3",
-      name: "fake1",
-      CFU: 10
-    },
-    {
-      id: "id4",
-      name: "fake1",
-      CFU: 10
-    },
-    {
-      id: "id4",
-      name: "fake1",
-      CFU: 10
-    },
-    {
-      id: "id4",
-      name: "fake1",
-      CFU: 10
-    },
-    {
-      id: "id4",
       name: "fake1",
       CFU: 10
     },

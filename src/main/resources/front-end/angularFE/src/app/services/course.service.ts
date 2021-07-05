@@ -9,4 +9,8 @@ export class CourseService {
   constructor(private client: HttpClient) { }
 
   getCourses = async (): Promise<Course[]> => await this.client.get(this.uriCourses).toPromise() as Promise<Course[]>
+
+  getCoursesById = async (coursesID: string[]): Promise<Course[]> => await this.client.get(this.uriCourses, { headers:{coursesID} })
+    .toPromise() as Promise<Course[]>
+
 }
