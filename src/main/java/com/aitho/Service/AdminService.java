@@ -1,8 +1,6 @@
 package com.aitho.Service;
 
 import com.aitho.Models.Admin;
-import com.aitho.Models.Students;
-import com.aitho.Models.Teacher;
 import com.aitho.Repository.AdminRepository;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

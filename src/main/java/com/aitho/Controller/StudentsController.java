@@ -50,7 +50,7 @@ public class StudentsController {
     public ResponseEntity<Students> addStudents(@RequestBody Students students, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
         if (checkController.checkLoginAdmin(email,role,token)) {
             studentService.addStudents(students);
-            return new ResponseEntity<>(null,HttpStatus.OK);
+            return new ResponseEntity<>(null,HttpStatus.CREATED);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
@@ -61,7 +61,11 @@ public class StudentsController {
     }
 
     @DeleteMapping(path = "/students",consumes = "application/json")
-    public ResponseEntity<HttpStatus> deleteStudents(@RequestBody Students student) {
-        return studentService.deleteStudents(student);
+    public ResponseEntity<HttpStatus> deleteStudents(@RequestBody Students student,@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        if (checkController.checkLoginAdmin(email,role,token)) {
+            studentService.deleteStudents(student);
+            return new ResponseEntity<>(null,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 }
