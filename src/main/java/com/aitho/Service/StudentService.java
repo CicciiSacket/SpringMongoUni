@@ -31,6 +31,9 @@ public class StudentService {
     public Boolean existStudentById(String id) { return studentsRepository.existsById(id); }
 
     public ResponseEntity<Students> addStudents(@RequestBody Students students) {
+        if(studentsRepository.findStudentByEmail(students.getEmail()).isPresent()){
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
         try {
             students.setToken(JWT.create().withSubject(students.getEmail()).sign(Algorithm.HMAC512(students.getPassword())));
             Students _students = studentsRepository.save(new Students(students.getName(), students.getSurname(), students.getEmail(), students.getPassword(), students.getToken()));
