@@ -6,3 +6,11 @@ export interface Teacher {
     role: string,
     token: string
 }
+
+export interface TeacherRes {
+    id: string,  
+    name: string,
+    surname: string
+}
+
+

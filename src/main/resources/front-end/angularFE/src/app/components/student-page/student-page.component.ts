@@ -3,102 +3,75 @@ import { Valutation, MappedValutation } from 'src/app/interface/valutations';
 import { StudentService } from 'src/app/services/student.service';
 import { CourseService } from 'src/app/services/course.service';
 import { Course } from 'src/app/interface/course';
+import { TeacherRes } from 'src/app/interface/teacher';
 import { DataShareService } from 'src/app/services/data-share.service';
+import { TeacherService } from 'src/app/services/teacher.service';
+
 @Component({
   selector: 'app-student-page',
   templateUrl: './student-page.component.html',
   styleUrls: ['./student-page.component.css']
 })
 export class StudentPageComponent implements OnInit {
-  public valutations : Valutation[] = []
-  public courses : Course[] = []
+  public valutations : Valutation[] = [];
+  public courses : Course[] = [];
+  public teachers : TeacherRes[] = [];
 
-  constructor(private studentService: StudentService, private courseService: CourseService, private dataShareService: DataShareService) { }
+  constructor(
+      private studentService: StudentService, 
+      private courseService: CourseService, 
+      private teacherService: TeacherService,
+      private dataShareService: DataShareService
+    ){}
 
   ngOnInit(): void {
-    this.studentService.getStudentValutations().then(valutations =>{
-      this.dataShareService.isUserLoggedIn.next(true)
-      console.log(valutations)
-      if (valutations.length > 0 ){
-        this.valutations = valutations
-        this.courseService.getCoursesById(this.mappedValutationsKeys).then(courses =>{
-          console.log(courses)
-          if(courses.length > 0){
-            this.courses = courses
-          }
-        })
-      }
-    })
-    
+    this.getValutations();
   }
 
-  fakeData = (): void =>{
-    this.valutations = [{
-      id: "id1",
-      id_course: "id1",
-      id_student: "id1",
-      id_teacher: "id1",
-      vote: 10
-    },
-    {
-      id: "id2",
-      id_course: "id1",
-      id_student: "id1",
-      id_teacher: "id1",
-      vote: 8
-    },
-    {
-      id: "id5",
-      id_course: "id1",
-      id_student: "id1",
-      id_teacher: "id1",
-      vote: 7
-    },
-    {
-      id: "id3",
-      id_course: "id2",
-      id_student: "id2",
-      id_teacher: "id2",
-      vote: 20
-    },
-    {
-      id: "id4",
-      id_course: "id3",
-      id_student: "id3",
-      id_teacher: "id3",
-      vote: 30
-    }]; 
-    this.courses = [{
-      id: "id1",
-      name: "fake1",
-      CFU: 10
-    },
-    {
-      id: "id2",
-      name: "fake1",
-      CFU: 10
-    },
-    {
-      id: "id3",
-      name: "fake1",
-      CFU: 10
-    },
-    {
-      id: "id4",
-      name: "fake1",
-      CFU: 10
-    }
-  ]; 
+  private getValutations = () => {
+    this.studentService.getStudentValutations().then(valutations =>{
+      this.dataShareService.isUserLoggedIn.next(true);
+      if (valutations.length > 0 ){
+        this.valutations = valutations;
+        this.getCoursesById();
+        //this.getTeachersById(valutations);
+      }
+    })
   }
+
+
+  private getCoursesById = () =>{
+    this.courseService.getCoursesById(this.mappedValutationsKeys).then(courses =>{
+      if(courses.length > 0){
+        this.courses = courses;
+      }
+    })
+  }
+
+  // private getTeachersById = (valutations: Valutation[]) =>{
+  //   const teachersId = valutations.reduce((acc: string[], current) => {
+  //     if(acc.indexOf(current.id_teacher) < 0){
+  //       acc.push(current.id_teacher);
+  //     }
+  //     return acc
+  //   },[])
+
+  //   this.teacherService.getTeachersById(teachersId).then(teachers =>{
+  //     if(teachers.length > 0){
+  //       this.teachers = teachers;
+  //     }
+  //   })
+  // }
+
 
   get mappedValutations(): MappedValutation {
     return this.valutations.reduce((acc:MappedValutation,value)=>{
       acc[value.id_course] = [...acc[value.id_course] || [], value];
-      return acc
+      return acc;
     }, {});
   }
 
   get mappedValutationsKeys(): string[] {
-    return Object.keys(this.mappedValutations)
+    return Object.keys(this.mappedValutations);
   }
 }

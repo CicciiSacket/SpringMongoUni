@@ -6,7 +6,6 @@ export interface Valutation {
     vote: number;
 }
 
-
 export interface MappedValutation {    
     [key: string]: Valutation[];
 }
