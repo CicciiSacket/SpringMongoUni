@@ -75,7 +75,7 @@ public class CourseService {
         }
     }
 
-    public List<Course> coursesById (@RequestHeader List<String> id ) {
+    public List<Course> getCourseFromIdList (@RequestHeader List<String> id ) {
         return courseRepository.findAll().stream().filter(course -> id.contains(course.getId())).collect(Collectors.toList());
     }
 
