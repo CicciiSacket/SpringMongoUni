@@ -1,6 +1,7 @@
 package com.aitho.Controller;
 
 import com.aitho.Models.Course;
+import com.aitho.Models.Teacher;
 import com.aitho.Service.CheckController;
 import com.aitho.Service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +23,15 @@ public class CourseController {
         this.checkController = checkController;
     }
 
-    @GetMapping("/courses")
+    @GetMapping("/course")
     public List<Course> getAllCourses() { return courseService.getAllCourses(); }
 
-    @GetMapping(path = "/courses/{name}",consumes = "application/json")
+    @GetMapping(path = "/course/{name}",consumes = "application/json")
     public ResponseEntity<Course> findCourseByname(@PathVariable("name") String name) {
         return courseService.findCourseByName(name);
     }
 
-    @PostMapping(path = "/courses",consumes = "application/json")
+    @PostMapping(path = "/course",consumes = "application/json")
     public ResponseEntity<Course> addCoruse(@RequestBody Course course, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
         if (checkController.checkLoginAdmin(email,role,token)){
             courseService.addCourse(course);
@@ -39,7 +40,7 @@ public class CourseController {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @PutMapping(path = "/courses/{id}",consumes = "application/json")
+    @PutMapping(path = "/course/{id}",consumes = "application/json")
     public ResponseEntity<Course> upgradeCourse (@PathVariable("id") String id,@RequestBody Course course,@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
         if (checkController.checkLoginTeacher(email,role,token)){
             courseService.updateCourse(id,course);
@@ -48,12 +49,17 @@ public class CourseController {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @DeleteMapping(path = "/courses",consumes = "application/json")
+    @DeleteMapping(path = "/course",consumes = "application/json")
     public ResponseEntity<HttpStatus> deleteCourse(@RequestBody Course course, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
         if (checkController.checkLoginAdmin(email,role,token)){
             courseService.deleteCourse(course);
             return new ResponseEntity<>(null,HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+
+    @GetMapping("/course/search")
+    public ResponseEntity<List<Course>> searchFromListID(@RequestHeader List<String> id) {
+        return new ResponseEntity<>(courseService.getCourseFromIdList(id), HttpStatus.OK);
     }
 }

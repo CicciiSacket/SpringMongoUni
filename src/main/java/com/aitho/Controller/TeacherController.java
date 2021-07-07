@@ -21,25 +21,25 @@ public class TeacherController {
         this.teacherService = teacherService;
     }
 
-    @GetMapping("/teachers")
+    @GetMapping("/teacher")
     public List<Teacher> getAllTeachers() { return teacherService.getAllTeachers(); }
 
-    @GetMapping("/teacherstest")
-    public ResponseEntity<List<Teacher>> test(@RequestHeader List<String> id) {
-        return new ResponseEntity<>(teacherService.teachersById(id), HttpStatus.OK);
+    @GetMapping("/teacher/search")
+    public ResponseEntity<List<Teacher>> searchFromListID(@RequestHeader List<String> id) {
+        return new ResponseEntity<>(teacherService.getTeachersFromIdList(id), HttpStatus.OK);
     }
 
-   @PostMapping(path = "/teachers",consumes = "application/json")
+   @PostMapping(path = "/teacher",consumes = "application/json")
    public ResponseEntity<Teacher> addTeacher(@RequestBody Teacher teacher) {
       return teacherService.addTeacher(teacher);
    }
 
-    @PutMapping(path = "/teachers/{id}",consumes = "application/json")
+    @PutMapping(path = "/teacher/{id}",consumes = "application/json")
     public ResponseEntity<Teacher> upgradeTeachers(@PathVariable("id") String id, @RequestBody Teacher teacher) {
         return teacherService.updateTeacher(id,teacher);
     }
 
-    @DeleteMapping(path = "/teachers",consumes = "application/json")
+    @DeleteMapping(path = "/teacher",consumes = "application/json")
     public ResponseEntity<HttpStatus> deleteTeacher(@RequestBody Teacher teacher) {
         return teacherService.deleteTeacher(teacher);
     }

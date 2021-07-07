@@ -1,22 +1,11 @@
 package com.aitho.Controller;
 
-import com.aitho.Models.Students;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.json.JsonContent;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.ResultMatcher;
-
-import static org.springframework.http.RequestEntity.put;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -28,43 +17,53 @@ public class StudentsControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    public void getAllStudentsTest() throws Exception {
-        this.mockMvc.perform(get("/students"))
+    public void getAllStudentsTestOk() throws Exception {
+        this.mockMvc.perform(get("/student").header("email","m.p@gmail.com").header("role","Teacher").header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtLnBAZ21haWwuY29tIn0.jZIfrfERlQ7PToru0BKECmSETGzEcJ6D3GM-sXcX1qhQLbPpman9u4irr5aSgF75meTMpOkvZ4-kYIjYEycBsw"))
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getAllStudentsTest4xx() throws Exception {
+        this.mockMvc.perform(get("/student"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void getAllStudentsTestForbidden() throws Exception {
+        this.mockMvc.perform(get("/student").header("email","m.p@gmail.com").header("role","Teacher").header("token",""))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void searchStudentTestOK() throws Exception {
+        this.mockMvc.perform(get("/student/{id}","60e4469f2754065bfabf44e6").header("email","m.p@gmail.com").header("role","Teacher").header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtLnBAZ21haWwuY29tIn0.jZIfrfERlQ7PToru0BKECmSETGzEcJ6D3GM-sXcX1qhQLbPpman9u4irr5aSgF75meTMpOkvZ4-kYIjYEycBsw"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void getSingleStudentsTest() throws Exception {
-        this.mockMvc.perform(get("/students/{id}","60c21cfd9b3db31a7a02bcef"))
+    public void searchStudentTestForbidden() throws Exception {
+        this.mockMvc.perform(get("/student/{id}","60e4469f2754065bfabf44e6").header("email","m.p@gmail.com").header("role","Teacher").header("token",""))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isForbidden());
     }
 
-//    @Test
-//    public void addStudentTest() throws Exception {
-//        var mario = new Students("mario","rossi","email");
-//        mario.setId("marioooo");
-//        ObjectMapper result = new ObjectMapper();
-//        String trueResult = result.writeValueAsString(mario);
-//        this.mockMvc.perform(post("/students").contentType(MediaType.APPLICATION_JSON).content(trueResult))
-//                .andDo(print())
-//                .andExpect(status().isCreated());
-//    }
+    @Test
+    public void searchStudentTestNotFound() throws Exception {
+        this.mockMvc.perform(get("/student/{id}","nn").header("email","m.p@gmail.com").header("role","Teacher").header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtLnBAZ21haWwuY29tIn0.jZIfrfERlQ7PToru0BKECmSETGzEcJ6D3GM-sXcX1qhQLbPpman9u4irr5aSgF75meTMpOkvZ4-kYIjYEycBsw"))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
 
-//    //incompleto
-//    @Test
-//    public void updateStudentTest() throws Exception {
-//        var mario = new Students("mario","rossi","email");
-//        mario.setId("marioooo");
-//        ObjectMapper result = new ObjectMapper();
-//        String trueResult = result.writeValueAsString(mario);
-//        this.mockMvc.perform(put("/students/{id}","60c21cfd9b3db31a7a02bcef").contentType(MediaType.APPLICATION_JSON).content(trueResult))
-//                .andDo(print())
-//                .andExpect(status().isNoContent());
-//    }
-
-
+    @Test
+    public void searchStudentTest4xx() throws Exception {
+        this.mockMvc.perform(get("/student/{id}","60e4469f2754065bfabf44e6"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
 
 
 }
