@@ -1,11 +1,10 @@
-<div *ngIf="valutations?.length != 0">
+<div *ngIf="valutations?.length != 0 && teachers">
     <mat-list *ngFor="let course of courses">
         <div mat-subheader>Corso: {{course.name}}</div>
         <mat-divider></mat-divider>
         <mat-list-item *ngFor="let valutation of mappedValutations[course.id]">
-            <div mat-line>id: {{valutation.id_teacher}}/{{course.CFU}}</div>
             <div mat-line>Voto: {{valutation.vote}}/{{course.CFU}}</div>
-            <div mat-line>Professore: </div>
+            <div *ngIf="teachers[valutation.id_teacher]" mat-line>Professore: {{teachers[valutation.id_teacher].name}} {{teachers[valutation.id_teacher].surname}}</div>
             <mat-divider></mat-divider>
         </mat-list-item> 
     </mat-list>

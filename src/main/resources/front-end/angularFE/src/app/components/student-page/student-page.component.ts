@@ -3,7 +3,7 @@ import { Valutation, MappedValutation } from 'src/app/interface/valutations';
 import { StudentService } from 'src/app/services/student.service';
 import { CourseService } from 'src/app/services/course.service';
 import { Course } from 'src/app/interface/course';
-import { TeacherRes } from 'src/app/interface/teacher';
+import { TeacherRes, MappedTeacher } from 'src/app/interface/teacher';
 import { DataShareService } from 'src/app/services/data-share.service';
 import { TeacherService } from 'src/app/services/teacher.service';
 
@@ -15,7 +15,7 @@ import { TeacherService } from 'src/app/services/teacher.service';
 export class StudentPageComponent implements OnInit {
   public valutations : Valutation[] = [];
   public courses : Course[] = [];
-  public teachers : TeacherRes[] = [];
+  public teachers : MappedTeacher = {};
 
   constructor(
       private studentService: StudentService, 
@@ -34,7 +34,7 @@ export class StudentPageComponent implements OnInit {
       if (valutations.length > 0 ){
         this.valutations = valutations;
         this.getCoursesById();
-        //this.getTeachersById(valutations);
+        this.getTeachersById(valutations);
       }
     })
   }
@@ -48,20 +48,19 @@ export class StudentPageComponent implements OnInit {
     })
   }
 
-  // private getTeachersById = (valutations: Valutation[]) =>{
-  //   const teachersId = valutations.reduce((acc: string[], current) => {
-  //     if(acc.indexOf(current.id_teacher) < 0){
-  //       acc.push(current.id_teacher);
-  //     }
-  //     return acc
-  //   },[])
-
-  //   this.teacherService.getTeachersById(teachersId).then(teachers =>{
-  //     if(teachers.length > 0){
-  //       this.teachers = teachers;
-  //     }
-  //   })
-  // }
+  private getTeachersById = (valutations: Valutation[]) =>{
+    const teachersId = valutations.reduce((acc: string[], current) => {
+      if(acc.indexOf(current.id_teacher) < 0){
+        acc.push(current.id_teacher);
+      }
+      return acc
+    },[])
+    this.teacherService.getTeachersById(teachersId).then(teachers =>{
+      if(Object.keys(teachers).length > 0){
+        this.teachers = teachers;
+      }
+    })
+  }
 
 
   get mappedValutations(): MappedValutation {

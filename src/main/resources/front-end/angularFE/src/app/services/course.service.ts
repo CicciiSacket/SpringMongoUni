@@ -10,7 +10,7 @@ export class CourseService {
 
   getCourses = async (): Promise<Course[]> => await this.client.get(this.uriCourses).toPromise() as Promise<Course[]>
 
-  getCoursesById = async (coursesID: string[]): Promise<Course[]> => await this.client.get(this.uriCourses+"/byid", { headers:{coursesID} })
+  getCoursesById = async (coursesID: string[]): Promise<Course[]> => await this.client.get(this.uriCourses+"/byids", { headers:{coursesID} })
     .toPromise() as Promise<Course[]>
 
 }
