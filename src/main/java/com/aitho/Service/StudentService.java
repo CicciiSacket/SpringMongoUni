@@ -4,6 +4,7 @@ import com.aitho.Models.Students;
 import com.aitho.Repository.StudentsRepository;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,17 +31,9 @@ public class StudentService {
 
     public Boolean existStudentById(String id) { return studentsRepository.existsById(id); }
 
-    public ResponseEntity<Students> addStudents(@RequestBody Students students) {
-        if(studentsRepository.findStudentByEmail(students.getEmail()).isPresent()){
-            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
-        }
-        try {
-            students.setToken(JWT.create().withSubject(students.getEmail()).sign(Algorithm.HMAC512(students.getPassword())));
-            Students _students = studentsRepository.save(new Students(students.getName(), students.getSurname(), students.getEmail(), students.getPassword(), students.getToken()));
-            return new ResponseEntity<>(_students, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public void addStudents(@RequestBody Students students) {
+        students.setToken(JWT.create().withSubject(students.getEmail()).sign(Algorithm.HMAC512(students.getPassword())));
+        studentsRepository.save(new Students(students.getName(), students.getSurname(), students.getEmail(), students.getPassword(), students.getToken()));
     }
 
     public Optional<Students> searchStudents(@PathVariable("id") String id) {
@@ -62,15 +55,9 @@ public class StudentService {
         }
     }
 
-    public ResponseEntity<HttpStatus> deleteStudents(@RequestBody Students student) {
-        Optional<Students> _students = studentsRepository.findById(student.getId());
-        if (_students.isPresent()) {
-            String _student = _students.get().getId();
-            studentsRepository.deleteById(_student);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public void deleteStudents(@RequestBody Students student) {
+        Students students = studentsRepository.findStudentByEmail(student.getEmail()).get();
+        studentsRepository.delete(students);
     }
 }
 

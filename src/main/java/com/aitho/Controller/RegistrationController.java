@@ -26,13 +26,13 @@ public class RegistrationController {
         this.studentsRepository = studentsRepository;
     }
 
-    @PostMapping(path = "/registration/students",consumes = "application/json")
-    public ResponseEntity<Students> addStudents(@RequestBody Students students) {
-        if(studentsRepository.findStudentByEmail(students.getEmail()).isPresent()){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return  studentService.addStudents(students);
-    }
+//    @PostMapping(path = "/registration/students",consumes = "application/json")
+//    public ResponseEntity<Students> addStudents(@RequestBody Students students) {
+//        if(studentsRepository.findStudentByEmail(students.getEmail()).isPresent()){
+//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//        return  studentService.addStudents(students);
+//    }
 
     @PostMapping(path = "/registration/teachers",consumes = "application/json")
    public ResponseEntity<Teacher> addTeacher(@RequestBody Teacher teacher) {
