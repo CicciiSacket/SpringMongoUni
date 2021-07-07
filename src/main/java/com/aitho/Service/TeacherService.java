@@ -1,6 +1,7 @@
 package com.aitho.Service;
 
 import com.aitho.Models.Teacher;
+import com.aitho.Models.TeacherRes;
 import com.aitho.Repository.TeacherRepository;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -76,8 +78,10 @@ public class TeacherService {
         }
     }
 
-    public List<Teacher> getTeachersFromIdList (@RequestHeader List<String> id ) {
-       return teacherRepository.findAll().stream().filter(teacher -> id.contains(teacher.getId())).collect(Collectors.toList());
+    public Map<String, TeacherRes> getTeachersFromIdList (@RequestHeader List<String> id ) {
+        return teacherRepository.findAll().stream().filter(teacher -> id.contains(teacher.getId()))
+                .map(n -> new TeacherRes(n.getId(), n.getName(), n.getSurname()))
+                .collect(Collectors.toMap(TeacherRes::getId, value -> value));
     }
 
 
