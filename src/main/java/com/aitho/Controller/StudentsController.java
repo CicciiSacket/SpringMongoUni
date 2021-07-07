@@ -30,7 +30,7 @@ public class StudentsController {
         this.checkController = checkController;
     }
 
-    @GetMapping("/students")
+    @GetMapping("/student")
     public ResponseEntity<List<Students>> getAllStudents(@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
         if (checkController.checkLoginTeacher(email,role,token)) {
             return new ResponseEntity<>(studentService.getAllStudents(),HttpStatus.OK);
@@ -38,7 +38,7 @@ public class StudentsController {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @GetMapping("/students/{id}")
+    @GetMapping("/student/{id}")
     public ResponseEntity<Optional<Students>> searchStudent(@PathVariable("id") String id, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
         if (checkController.checkLoginTeacher(email,role,token)) {
             return new ResponseEntity<>(studentService.searchStudents(id),HttpStatus.OK);
@@ -46,7 +46,7 @@ public class StudentsController {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @PostMapping(path = "/students",consumes = "application/json")
+    @PostMapping(path = "/student",consumes = "application/json")
     public ResponseEntity<Students> addStudents(@RequestBody Students students, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
         if (checkController.checkLoginAdmin(email,role,token)) {
             studentService.addStudents(students);
@@ -55,12 +55,12 @@ public class StudentsController {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @PutMapping(path = "/students/{id}",consumes = "application/json")
+    @PutMapping(path = "/student/{id}",consumes = "application/json")
     public ResponseEntity<Students> updateStudents(@PathVariable("id") String id, @RequestBody Students students) {
         return  studentService.updateStudents(id,students);
     }
 
-    @DeleteMapping(path = "/students",consumes = "application/json")
+    @DeleteMapping(path = "/student",consumes = "application/json")
     public ResponseEntity<HttpStatus> deleteStudents(@RequestBody Students student,@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
         if (checkController.checkLoginAdmin(email,role,token)) {
             studentService.deleteStudents(student);

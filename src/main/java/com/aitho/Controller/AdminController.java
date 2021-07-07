@@ -19,7 +19,7 @@ public class AdminController {
         this.adminService = adminService;
     }
 
-    @GetMapping("/admins")
+    @GetMapping("/admin")
     public ResponseEntity<List<Admin>> getAllAdmins (){
         return new ResponseEntity<>(adminService.getAllAdmin(), HttpStatus.OK);
     }
