@@ -2,6 +2,7 @@ package com.aitho.Controller;
 
 import com.aitho.Models.Students;
 import com.aitho.Repository.StudentsRepository;
+import com.aitho.Service.AdminService;
 import com.aitho.Service.CheckController;
 import com.aitho.Service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,14 @@ import java.util.Optional;
 public class StudentsController {
 
     private final StudentService studentService;
+    private final AdminService adminService;
     private final StudentsRepository studentsRepository;
     private final CheckController checkController;
 
     @Autowired
-    public StudentsController(StudentService studentService, StudentsRepository studentsRepository, CheckController checkController) {
+    public StudentsController(StudentService studentService, AdminService adminService, StudentsRepository studentsRepository, CheckController checkController) {
         this.studentService = studentService;
+        this.adminService = adminService;
         this.studentsRepository = studentsRepository;
         this.checkController = checkController;
     }
@@ -36,14 +39,20 @@ public class StudentsController {
     }
 
     @GetMapping("/students/{id}")
-    public Optional<Students> searchStudent(@PathVariable("id") String id) { return studentService.searchStudents(id);}
+    public ResponseEntity<Optional<Students>> searchStudent(@PathVariable("id") String id, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        if (checkController.checkLoginTeacher(email,role,token)) {
+            return new ResponseEntity<>(studentService.searchStudents(id),HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
 
     @PostMapping(path = "/students",consumes = "application/json")
-    public ResponseEntity<Students> addStudents(@RequestBody Students students) {
-        if(studentsRepository.findStudentByEmail(students.getEmail()).isPresent()){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<Students> addStudents(@RequestBody Students students, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        if (checkController.checkLoginAdmin(email,role,token)) {
+            studentService.addStudents(students);
+            return new ResponseEntity<>(null,HttpStatus.CREATED);
         }
-        return  studentService.addStudents(students);
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @PutMapping(path = "/students/{id}",consumes = "application/json")
@@ -52,7 +61,11 @@ public class StudentsController {
     }
 
     @DeleteMapping(path = "/students",consumes = "application/json")
-    public ResponseEntity<HttpStatus> deleteStudents(@RequestBody Students student) {
-        return studentService.deleteStudents(student);
+    public ResponseEntity<HttpStatus> deleteStudents(@RequestBody Students student,@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        if (checkController.checkLoginAdmin(email,role,token)) {
+            studentService.deleteStudents(student);
+            return new ResponseEntity<>(null,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 }
