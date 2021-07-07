@@ -41,6 +41,9 @@ public class StudentsController {
     @GetMapping("/student/{id}")
     public ResponseEntity<Optional<Students>> searchStudent(@PathVariable("id") String id, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
         if (checkController.checkLoginTeacher(email,role,token)) {
+            if (!studentsRepository.existsById(id)) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
             return new ResponseEntity<>(studentService.searchStudents(id),HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
