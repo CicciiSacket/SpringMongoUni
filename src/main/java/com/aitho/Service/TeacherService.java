@@ -1,5 +1,6 @@
 package com.aitho.Service;
 
+import com.aitho.Models.Students;
 import com.aitho.Models.Teacher;
 import com.aitho.Models.TeacherRes;
 import com.aitho.Repository.TeacherRepository;
@@ -28,7 +29,9 @@ public class TeacherService {
         this.teacherRepository = teacherRepository;
     }
 
-    public List<Teacher> getAllTeachers() { return teacherRepository.findAll(); }
+    public List<Teacher> getAllTeachers() {
+        return teacherRepository.findAll();
+    }
 
     public Boolean existTeacherById(String id) {return teacherRepository.existsById(id);}
 
@@ -41,37 +44,23 @@ public class TeacherService {
                 () -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
-    public ResponseEntity<Teacher> addTeacher(@RequestBody Teacher teacher) {
-        try {
-            teacher.setToken(JWT.create().withSubject(teacher.getEmail()).sign(Algorithm.HMAC512(teacher.getPassword())));
-            Teacher _teachers = teacherRepository.save(new Teacher(teacher.getName(), teacher.getSurname(), teacher.getEmail(), teacher.getPassword(), teacher.getToken()));
-            return new ResponseEntity<>(_teachers , HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    public void addTeacher(@RequestBody Teacher teacher) {
+        teacher.setToken(JWT.create().withSubject(teacher.getEmail()).sign(Algorithm.HMAC512(teacher.getPassword())));
+        teacherRepository.save(new Teacher(teacher.getName(), teacher.getSurname(), teacher.getEmail(), teacher.getPassword(), teacher.getToken()));
+    }
+
+    public void updateTeachertMail(@PathVariable("id") String id, @RequestBody String newMail) {
+        Optional<Teacher> teacher = teacherRepository.findById(id);
+        if (teacher.isPresent()) {
+            Teacher _teacher = teacher.get();
+            _teacher.setEmail(newMail);
+            teacherRepository.save(_teacher);
         }
     }
 
-    public ResponseEntity<Teacher> updateTeacher(@PathVariable("id") String id, @RequestBody Teacher teacher) {
-        Optional<Teacher> teacherUpgrade = teacherRepository.findById(id);
-        if (teacherUpgrade.isPresent()) {
-            Teacher _teacherUpgrade = teacherUpgrade.get();
-            _teacherUpgrade.setEmail(teacher.getEmail());
-            return new ResponseEntity<>(teacherRepository.save(_teacherUpgrade),HttpStatus.NO_CONTENT);
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    public ResponseEntity<HttpStatus> deleteTeacher(@RequestBody Teacher teacher) {
-        Optional<Teacher> _teacher = teacherRepository.findById(teacher.getId());
-        if (_teacher.isPresent()) {
-            String _student = _teacher.get().getId();
-            teacherRepository.deleteById(_student);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public void deleteTeacher(@RequestBody Teacher teacher) {
+        Teacher _teacher = teacherRepository.findTeacherByEmail(teacher.getEmail()).get();
+        teacherRepository.delete(_teacher);
     }
 
     public Map<String, TeacherRes> getTeachersFromIdList (@RequestHeader List<String> teachersID ) {
