@@ -6,7 +6,7 @@ import { TeacherRes, MappedTeacher } from '../interface/teacher';
   providedIn: 'root'
 })
 export class TeacherService {
-  private uriTeacher =  "http://localhost:8093/teachers"
+  private uriTeacher =  "http://localhost:8093/teacher"
   constructor(private client: HttpClient) { }
 
   getTeachersById = async (teachersID: string[]): Promise<MappedTeacher> => await this.client.get(this.uriTeacher+"test", { headers:{teachersID} })

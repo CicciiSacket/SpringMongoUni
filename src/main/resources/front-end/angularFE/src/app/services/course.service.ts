@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class CourseService {
-  private uriCourses =  "http://localhost:8093/courses"
+  private uriCourses =  "http://localhost:8093/course"
   constructor(private client: HttpClient) { }
 
   getCourses = async (): Promise<Course[]> => await this.client.get(this.uriCourses).toPromise() as Promise<Course[]>

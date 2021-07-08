@@ -8,8 +8,8 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthServiceService {
-  private uriStudent = "http://localhost:8093/students"
-  private uriTeacher = "http://localhost:8093/teachers"
+  private uriStudent = "http://localhost:8093/student"
+  private uriTeacher = "http://localhost:8093/teacher"
   private uriLogin = "http://localhost:8093/login"
 
   constructor(private client: HttpClient, private router: Router) { }
@@ -19,7 +19,7 @@ export class AuthServiceService {
 
   signupTeacher = async (teacher: Teacher): Promise<Teacher> => 
     await this.client.post(this.uriTeacher, teacher).toPromise() as Promise<Teacher>
-  //This will probably change to one service for all login
+    
   loginStudent = async (email: string, password: string, role: string): Promise<StudentRes> =>
     await this.client.post(this.uriLogin + "/" + role.toLowerCase(), {email, password, role}).toPromise() as Promise<StudentRes>
 
