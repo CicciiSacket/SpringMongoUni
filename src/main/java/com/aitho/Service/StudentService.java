@@ -44,14 +44,12 @@ public class StudentService {
         return studentsRepository.findStudentByEmail(email);
     }
 
-    public ResponseEntity<Students> updateStudents(@PathVariable("id") String id, @RequestBody Students students) {
+    public void updateStudentMail(@PathVariable("id") String id, @RequestBody String newMail) {
         Optional<Students> _students = studentsRepository.findById(id);
         if (_students.isPresent()) {
             Students _student = _students.get();
-            _student.setEmail(students.getEmail());
-            return new ResponseEntity<>(studentsRepository.save(_student), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            _student.setEmail(newMail);
+            studentsRepository.save(_student);
         }
     }
 

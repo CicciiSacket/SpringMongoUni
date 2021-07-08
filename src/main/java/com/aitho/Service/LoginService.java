@@ -31,7 +31,6 @@ public class LoginService {
             Optional<Students> loginStudent = studentService.searchStudentByEmail(auth.getEmail());
             if(loginStudent.isPresent() && loginStudent.get().getPassword().equals(auth.getPassword())) {
                 loginStudent.get().setToken(JWT.create().withSubject(auth.getEmail()).sign(Algorithm.HMAC512(auth.getPassword())));
-                studentService.updateStudents(loginStudent.get().getId(),loginStudent.get());
                 return loginStudent.get().getToken();
             }
         }
@@ -43,7 +42,7 @@ public class LoginService {
             Optional<Teacher> loginTeacher = teacherService.searchTeacherByEmail(auth.getEmail());
             if(loginTeacher.isPresent() && loginTeacher.get().getPassword().equals(auth.getPassword())) {
                 loginTeacher.get().setToken(JWT.create().withSubject(auth.getEmail()).sign(Algorithm.HMAC512(auth.getPassword())));
-                teacherService.updateTeacher(loginTeacher.get().getId(),loginTeacher.get());
+
                 return loginTeacher.get().getToken();
             }
         }
@@ -55,7 +54,6 @@ public class LoginService {
             Optional<Admin> loginAdmin = adminService.searchAdminByEmail(auth.getEmail());
             if(loginAdmin.isPresent() && loginAdmin.get().getPassword().equals(auth.getPassword())) {
                 loginAdmin.get().setToken(JWT.create().withSubject(auth.getEmail()).sign(Algorithm.HMAC512(auth.getPassword())));
-                adminService.updateAdmin(loginAdmin.get().getId(),loginAdmin.get());
                 return loginAdmin.get().getToken();
             }
         }

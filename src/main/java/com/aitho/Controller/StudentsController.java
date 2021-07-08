@@ -64,8 +64,16 @@ public class StudentsController {
     }
 
     @PutMapping(path = "/student/{id}",consumes = "application/json")
-    public ResponseEntity<Students> updateStudents(@PathVariable("id") String id, @RequestBody Students students) {
-        return  studentService.updateStudents(id,students);
+    public ResponseEntity<Students> updateStudentMail(@PathVariable("id") String id, @RequestBody String newMail,@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        if (newMail.isEmpty()) { return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST); }
+        if (studentsRepository.findStudentByEmail(newMail).isPresent()){
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
+        if (checkController.checkLoginAdmin(email,role,token)) {
+            studentService.updateStudentMail(id,newMail);
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @DeleteMapping(path = "/student",consumes = "application/json")
