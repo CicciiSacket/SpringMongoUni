@@ -5,6 +5,7 @@ import com.aitho.Repository.StudentsRepository;
 import com.aitho.Service.AdminService;
 import com.aitho.Service.CheckController;
 import com.aitho.Service.StudentService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +52,11 @@ public class StudentsController {
 
     @PostMapping(path = "/student",consumes = "application/json")
     public ResponseEntity<Students> addStudents(@RequestBody Students students, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        if (students.getEmail().isEmpty()) { return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST); }
         if (checkController.checkLoginAdmin(email,role,token)) {
+            if(studentsRepository.findStudentByEmail(students.getEmail()).isPresent()){
+                return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+            }
             studentService.addStudents(students);
             return new ResponseEntity<>(null,HttpStatus.CREATED);
         }
@@ -64,10 +69,14 @@ public class StudentsController {
     }
 
     @DeleteMapping(path = "/student",consumes = "application/json")
-    public ResponseEntity<HttpStatus> deleteStudents(@RequestBody Students student,@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+    public ResponseEntity<HttpStatus> deleteStudents(@RequestBody Students student, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        if (student.getEmail().isEmpty()) { return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST); }
         if (checkController.checkLoginAdmin(email,role,token)) {
-            studentService.deleteStudents(student);
-            return new ResponseEntity<>(null,HttpStatus.OK);
+            if(studentsRepository.findStudentByEmail(student.getEmail()).isPresent()) {
+                studentService.deleteStudents(student);
+                return new ResponseEntity<>(null,HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
