@@ -14,13 +14,15 @@ import { StudentService } from './services/student.service';
 import { LoginPageComponent } from './components/login-page/login-page.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { SignupPageComponent } from './components/signup-page/signup-page.component';
+import { StudentPageComponent } from './components/student-page/student-page.component';
+import { TeacherPageComponent } from './components/teacher-page/teacher-page.component';
 
 //Material
 import { MatFormFieldModule } from '@angular/material/form-field'; 
 import { MatInputModule } from '@angular/material/input'; 
 import { MatRadioModule } from '@angular/material/radio';
-import { StudentPageComponent } from './components/student-page/student-page.component';
-import { TeacherPageComponent } from './components/teacher-page/teacher-page.component';
+import { MatListModule } from '@angular/material/list'; 
+
 
 
 @NgModule({
@@ -40,6 +42,7 @@ import { TeacherPageComponent } from './components/teacher-page/teacher-page.com
     AppRoutingModule,
     BrowserAnimationsModule,
     MatFormFieldModule,
+    MatListModule,
     MatInputModule,
     MatRadioModule
   ],

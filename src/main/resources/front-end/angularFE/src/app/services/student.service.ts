@@ -9,7 +9,7 @@ import { Valutation } from '../interface/valutations';
 })
 
 export class StudentService {
-  private uriStudent = "http://localhost:8093/students"
+  private uriStudent = "http://localhost:8093/student"
   private uriStudentValutations =  "http://localhost:8093/valutations/student"
   constructor(private client: HttpClient, private router: Router) { }
 

@@ -31,12 +31,12 @@ public class StudentService {
 
     public Boolean existStudentById(String id) { return studentsRepository.existsById(id); }
 
-    public void addStudents(@RequestBody Students students) {
+    public void addStudent(@RequestBody Students students) {
         students.setToken(JWT.create().withSubject(students.getEmail()).sign(Algorithm.HMAC512(students.getPassword())));
         studentsRepository.save(new Students(students.getName(), students.getSurname(), students.getEmail(), students.getPassword(), students.getToken()));
     }
 
-    public Optional<Students> searchStudents(@PathVariable("id") String id) {
+    public Optional<Students> searchStudent(@PathVariable("id") String id) {
         return studentsRepository.findById(id);
     }
 
@@ -53,7 +53,7 @@ public class StudentService {
         }
     }
 
-    public void deleteStudents(@RequestBody Students student) {
+    public void deleteStudent(@RequestBody Students student) {
         Students students = studentsRepository.findStudentByEmail(student.getEmail()).get();
         studentsRepository.delete(students);
     }

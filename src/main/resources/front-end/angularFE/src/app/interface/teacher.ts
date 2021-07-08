@@ -7,6 +7,15 @@ export interface Teacher {
     token: string
 }
 
-
-export interface TeacherRes{
+export interface TeacherRes {    
+    name: string,
+    surname: string,
+    email: string,
 }
+
+
+export interface MappedTeacher {
+    [id:string]: TeacherRes,
+}
+
+

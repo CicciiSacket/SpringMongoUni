@@ -2,6 +2,7 @@ package com.aitho.Controller;
 
 import com.aitho.Models.Course;
 import com.aitho.Models.Teacher;
+import com.aitho.Models.TeacherRes;
 import com.aitho.Service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -25,7 +27,7 @@ public class TeacherController {
     public List<Teacher> getAllTeachers() { return teacherService.getAllTeachers(); }
 
     @GetMapping("/teacher/search")
-    public ResponseEntity<List<Teacher>> searchFromListID(@RequestHeader List<String> id) {
+    public ResponseEntity<Map<String, TeacherRes>> getTeacherFromListID(@RequestHeader List<String> id) {
         return new ResponseEntity<>(teacherService.getTeachersFromIdList(id), HttpStatus.OK);
     }
 
@@ -35,8 +37,8 @@ public class TeacherController {
    }
 
     @PutMapping(path = "/teacher/{id}",consumes = "application/json")
-    public ResponseEntity<Teacher> upgradeTeachers(@PathVariable("id") String id, @RequestBody Teacher teacher) {
-        return teacherService.updateTeacher(id,teacher);
+    public ResponseEntity<Teacher> upgradeTeachers(@PathVariable("id") String teachersID, @RequestBody Teacher teacher) {
+        return teacherService.updateTeacher(teachersID,teacher);
     }
 
     @DeleteMapping(path = "/teacher",consumes = "application/json")

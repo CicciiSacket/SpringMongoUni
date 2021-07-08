@@ -9,21 +9,13 @@ import { StudentService } from './services/student.service'
 })
 export class AppComponent {
   title = 'angularFE';
+
   studentsList: Student[] | undefined;
 
-
   constructor(private studentService: StudentService){
-
+   
   }
 
   ngOnInit(): void{
-    this.getStudents();
   }
-
-  async getStudents(): Promise<void> {
-    this.studentsList = await this.studentService.getAllStudents();
-  }
-
-
-
 }

@@ -1,8 +1,11 @@
-<div *ngIf="valutations?.length != 0">
-    <ul>
-        <li *ngFor="let valutation of valutations">
-            <p>{{valutation.vote}}</p>
-        </li>
-
-    </ul>
+<div *ngIf="valutations?.length != 0 && teachers">
+    <mat-list *ngFor="let course of courses">
+        <div mat-subheader>Corso: {{course.name}}</div>
+        <mat-divider></mat-divider>
+        <mat-list-item *ngFor="let valutation of mappedValutations[course.id]">
+            <div mat-line>Voto: {{valutation.vote}}/{{course.CFU}}</div>
+            <div *ngIf="teachers[valutation.id_teacher]" mat-line>Professore: {{teachers[valutation.id_teacher].name}} {{teachers[valutation.id_teacher].surname}}</div>
+            <mat-divider></mat-divider>
+        </mat-list-item> 
+    </mat-list>
 </div>

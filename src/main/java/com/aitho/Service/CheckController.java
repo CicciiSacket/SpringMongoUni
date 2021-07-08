@@ -24,7 +24,7 @@ public class CheckController {
         this.adminService = adminService;
     }
 
-    public boolean checkLoginStudents(@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+    public boolean checkLoginStudent(@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
         if (Role.valueOf(role) == Role.Student) {
             Optional<Students> authStudent = studentService.searchStudentByEmail(email);
             if (authStudent.isPresent() && authStudent.get().getToken().equals(token)) {

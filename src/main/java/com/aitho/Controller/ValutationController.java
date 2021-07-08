@@ -49,7 +49,7 @@ public class ValutationController {
     }
 
     @PutMapping(path = "/valutation/{id}",consumes = "application/json")
-    public ResponseEntity<Valutation> upgradeCourse (@PathVariable("id") String id, @RequestBody Valutation valutation) {
+    public ResponseEntity<Valutation> updateValutation (@PathVariable("id") String id, @RequestBody Valutation valutation) {
         return valutationService.updateValutation(id,valutation);
     }
 
