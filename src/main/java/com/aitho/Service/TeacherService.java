@@ -36,13 +36,9 @@ public class TeacherService {
         return teacherRepository.findTeacherByEmail(email);
     }
 
-    public ResponseEntity<Teacher> getTeacher(@RequestBody Teacher teacher) {
-        Optional<Teacher> _teacher = teacherRepository.findById(teacher.getId());
-        return _teacher.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
-    }
-
-    public Optional<Teacher> findTeacherById(String id){
-        return teacherRepository.findById(id);
+    public ResponseEntity<Teacher> findTeacherById(String id){
+        return teacherRepository.findById(id).map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(
+                () -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     public ResponseEntity<Teacher> addTeacher(@RequestBody Teacher teacher) {
@@ -78,8 +74,8 @@ public class TeacherService {
         }
     }
 
-    public Map<String, TeacherRes> getTeachersFromIdList (@RequestHeader List<String> id ) {
-        return teacherRepository.findAll().stream().filter(teacher -> id.contains(teacher.getId()))
+    public Map<String, TeacherRes> getTeachersFromIdList (@RequestHeader List<String> teachersID ) {
+        return teacherRepository.findAll().stream().filter(teacher -> teachersID.contains(teacher.getId()))
                 .map(n -> new TeacherRes(n.getId(), n.getName(), n.getSurname()))
                 .collect(Collectors.toMap(TeacherRes::getId, value -> value));
     }

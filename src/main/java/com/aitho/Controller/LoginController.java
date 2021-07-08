@@ -26,11 +26,11 @@ public class LoginController {
         this.loginService = loginService;
     }
 
-    @PostMapping(path = "/login/students",consumes = "application/json")
+    @PostMapping(path = "/login/student",consumes = "application/json")
     public ResponseEntity<String> loginStudents(@RequestBody Authentication auth) {
         JSONObject resp = new JSONObject();
         try {
-            resp.put("token", loginService.loginStudents(auth));
+            resp.put("token", loginService.loginStudent(auth));
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -38,7 +38,7 @@ public class LoginController {
         return new ResponseEntity<>(resp.toString(), HttpStatus.OK);
     }
 
-    @PostMapping(path = "/login/teachers",consumes = "application/json")
+    @PostMapping(path = "/login/teacher",consumes = "application/json")
     public ResponseEntity<String> loginTeachers(@RequestBody Authentication auth) {
         JSONObject resp = new JSONObject();
         try {

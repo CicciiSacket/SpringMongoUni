@@ -30,7 +30,10 @@ public class StudentsControllerTest {
 
     @Test
     public void getAllStudentsTestOk() throws Exception {
-        this.mockMvc.perform(get("/student").header("email","m.p@gmail.com").header("role","Teacher").header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtLnBAZ21haWwuY29tIn0.jZIfrfERlQ7PToru0BKECmSETGzEcJ6D3GM-sXcX1qhQLbPpman9u4irr5aSgF75meTMpOkvZ4-kYIjYEycBsw"))
+        this.mockMvc.perform(get("/student")
+                .header("email","m.p@gmail.com")
+                .header("role","Teacher")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtLnBAZ21haWwuY29tIn0.jZIfrfERlQ7PToru0BKECmSETGzEcJ6D3GM-sXcX1qhQLbPpman9u4irr5aSgF75meTMpOkvZ4-kYIjYEycBsw"))
             .andDo(print())
             .andExpect(status().isOk());
     }
@@ -44,28 +47,40 @@ public class StudentsControllerTest {
 
     @Test
     public void getAllStudentsTestForbidden() throws Exception {
-        this.mockMvc.perform(get("/student").header("email","m.p@gmail.com").header("role","Teacher").header("token",""))
+        this.mockMvc.perform(get("/student")
+                .header("email","m.p@gmail.com")
+                .header("role","Teacher")
+                .header("token",""))
                 .andDo(print())
                 .andExpect(status().isForbidden());
     }
 
     @Test
     public void searchStudentTestOK() throws Exception {
-        this.mockMvc.perform(get("/student/{id}","60e4469f2754065bfabf44e6").header("email","m.p@gmail.com").header("role","Teacher").header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtLnBAZ21haWwuY29tIn0.jZIfrfERlQ7PToru0BKECmSETGzEcJ6D3GM-sXcX1qhQLbPpman9u4irr5aSgF75meTMpOkvZ4-kYIjYEycBsw"))
+        this.mockMvc.perform(get("/student/{id}","60e4469f2754065bfabf44e6")
+                .header("email","m.p@gmail.com")
+                .header("role","Teacher")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtLnBAZ21haWwuY29tIn0.jZIfrfERlQ7PToru0BKECmSETGzEcJ6D3GM-sXcX1qhQLbPpman9u4irr5aSgF75meTMpOkvZ4-kYIjYEycBsw"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
     public void searchStudentTestForbidden() throws Exception {
-        this.mockMvc.perform(get("/student/{id}","60e4469f2754065bfabf44e6").header("email","m.p@gmail.com").header("role","Teacher").header("token",""))
+        this.mockMvc.perform(get("/student/{id}","60e4469f2754065bfabf44e6")
+                .header("email","m.p@gmail.com")
+                .header("role","Teacher")
+                .header("token",""))
                 .andDo(print())
                 .andExpect(status().isForbidden());
     }
 
     @Test
     public void searchStudentTestNotFound() throws Exception {
-        this.mockMvc.perform(get("/student/{id}","nn").header("email","m.p@gmail.com").header("role","Teacher").header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtLnBAZ21haWwuY29tIn0.jZIfrfERlQ7PToru0BKECmSETGzEcJ6D3GM-sXcX1qhQLbPpman9u4irr5aSgF75meTMpOkvZ4-kYIjYEycBsw"))
+        this.mockMvc.perform(get("/student/{id}","nn")
+                .header("email","m.p@gmail.com")
+                .header("role","Teacher")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtLnBAZ21haWwuY29tIn0.jZIfrfERlQ7PToru0BKECmSETGzEcJ6D3GM-sXcX1qhQLbPpman9u4irr5aSgF75meTMpOkvZ4-kYIjYEycBsw"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -82,7 +97,12 @@ public class StudentsControllerTest {
         var testStudent = new Students("pippo","pluto","12","mario","");
         ObjectMapper resultTestStudent = new ObjectMapper();
         String trueResult = resultTestStudent.writeValueAsString(testStudent);
-        this.mockMvc.perform(post("/student").header("email","mario@").header("role","Admin").header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA").contentType(MediaType.APPLICATION_JSON).content(trueResult))
+        this.mockMvc.perform(post("/student")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(trueResult))
                 .andDo(print())
                 .andExpect(status().isCreated());
     }
@@ -92,7 +112,12 @@ public class StudentsControllerTest {
         var testStudent = new Students("pippo","pluto","pippo","mario","");
         ObjectMapper resultTestStudent = new ObjectMapper();
         String trueResult = resultTestStudent.writeValueAsString(testStudent);
-        this.mockMvc.perform(post("/student").header("email","mario@").header("role","Admin").header("token"," ").contentType(MediaType.APPLICATION_JSON).content(trueResult))
+        this.mockMvc.perform(post("/student")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token"," ")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(trueResult))
                 .andDo(print())
                 .andExpect(status().isForbidden());
     }
@@ -102,7 +127,12 @@ public class StudentsControllerTest {
         var testStudent = new Students("pippo","pluto","pippo","mario","");
         ObjectMapper resultTestStudent = new ObjectMapper();
         String trueResult = resultTestStudent.writeValueAsString(testStudent);
-        this.mockMvc.perform(post("/student").header("email","mario@").header("role","Admin").header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA").contentType(MediaType.APPLICATION_JSON).content(trueResult))
+        this.mockMvc.perform(post("/student")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(trueResult))
                 .andDo(print())
                 .andExpect(status().isNotAcceptable());
     }
@@ -112,7 +142,12 @@ public class StudentsControllerTest {
         var testStudent = new Students("pippo","pluto","","mario","");
         ObjectMapper resultTestStudent = new ObjectMapper();
         String trueResult = resultTestStudent.writeValueAsString(testStudent);
-        this.mockMvc.perform(post("/student").header("email","mario@").header("role","Admin").header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA").contentType(MediaType.APPLICATION_JSON).content(trueResult))
+        this.mockMvc.perform(post("/student")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(trueResult))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -122,7 +157,11 @@ public class StudentsControllerTest {
         var testStudent = new Students("pippo","pluto","12","mario","");
         ObjectMapper resultTestStudent = new ObjectMapper();
         String trueResult = resultTestStudent.writeValueAsString(testStudent);
-        this.mockMvc.perform(delete("/student").header("email","mario@").header("role","Admin").header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA").contentType(MediaType.APPLICATION_JSON).content(trueResult))
+        this.mockMvc.perform(delete("/student")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON).content(trueResult))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -132,7 +171,12 @@ public class StudentsControllerTest {
         var testStudent = new Students("pippo","pluto","","mario","");
         ObjectMapper resultTestStudent = new ObjectMapper();
         String trueResult = resultTestStudent.writeValueAsString(testStudent);
-        this.mockMvc.perform(delete("/student").header("email","mario@").header("role","Admin").header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA").contentType(MediaType.APPLICATION_JSON).content(trueResult))
+        this.mockMvc.perform(delete("/student")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(trueResult))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -142,7 +186,12 @@ public class StudentsControllerTest {
         var testStudent = new Students("matteo","annaro","mattei","mattei","");
         ObjectMapper resultTestStudent = new ObjectMapper();
         String trueResult = resultTestStudent.writeValueAsString(testStudent);
-        this.mockMvc.perform(delete("/student").header("email","mario@").header("role","Admin").header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA").contentType(MediaType.APPLICATION_JSON).content(trueResult))
+        this.mockMvc.perform(delete("/student")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(trueResult))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -152,35 +201,55 @@ public class StudentsControllerTest {
         var testStudent = new Students("pippo","pluto","12","mario","");
         ObjectMapper resultTestStudent = new ObjectMapper();
         String trueResult = resultTestStudent.writeValueAsString(testStudent);
-        this.mockMvc.perform(delete("/student").header("email","mario@").header("role","Admin").header("token","").contentType(MediaType.APPLICATION_JSON).content(trueResult))
+        this.mockMvc.perform(delete("/student")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(trueResult))
                 .andDo(print())
                 .andExpect(status().isForbidden());
     }
 
     @Test
     public void updateStudentMailOk() throws Exception {
-        this.mockMvc.perform(put("/student/{id}","60e6ca48414a6f445ca91fb8").header("email","mario@").header("role","Admin").header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA").contentType(MediaType.APPLICATION_JSON).content("NUOVAMAIL"))
+        this.mockMvc.perform(put("/student/{id}","60e6ca48414a6f445ca91fb8")
+                .header("email","mario@").header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("NUOVAMAIL"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
     public void updateStudentMailBadRequest() throws Exception {
-        this.mockMvc.perform(put("/student/{id}","60e6ca48414a6f445ca91fb8").header("email","mario@").header("role","Admin").header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA").contentType(MediaType.APPLICATION_JSON).content(""))
+        this.mockMvc.perform(put("/student/{id}","60e6ca48414a6f445ca91fb8")
+                .header("email","mario@").header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(""))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     public void updateStudentMailNotAcceptable() throws Exception {
-        this.mockMvc.perform(put("/student/{id}","60e6ca48414a6f445ca91fb8").header("email","mario@").header("role","Admin").header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA").contentType(MediaType.APPLICATION_JSON).content("NUOVAMAIL"))
+        this.mockMvc.perform(put("/student/{id}","60e6ca48414a6f445ca91fb8")
+                .header("email","mario@").header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("NUOVAMAIL"))
                 .andDo(print())
                 .andExpect(status().isNotAcceptable());
     }
 
     @Test
     public void updateStudentMailForbidden() throws Exception {
-        this.mockMvc.perform(put("/student/{id}","60e6ca48414a6f445ca91fb8").header("email","mario@").header("role","Admin").header("token","").contentType(MediaType.APPLICATION_JSON).content("lill"))
+        this.mockMvc.perform(put("/student/{id}","60e6ca48414a6f445ca91fb8")
+                .header("email","mario@").header("role","Admin")
+                .header("token","")
+                .contentType(MediaType.APPLICATION_JSON).content("lill"))
                 .andDo(print())
                 .andExpect(status().isForbidden());
     }

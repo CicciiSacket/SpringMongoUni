@@ -26,7 +26,7 @@ public class LoginService {
         this.valutationService = valutationService;
     }
 
-    public String loginStudents(@RequestBody Authentication auth) {
+    public String loginStudent(@RequestBody Authentication auth) {
         if (auth.getRole() == Role.Student){
             Optional<Students> loginStudent = studentService.searchStudentByEmail(auth.getEmail());
             if(loginStudent.isPresent() && loginStudent.get().getPassword().equals(auth.getPassword())) {

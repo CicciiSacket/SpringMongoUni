@@ -45,7 +45,7 @@ public class StudentsController {
             if (!studentsRepository.existsById(id)) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>(studentService.searchStudents(id),HttpStatus.OK);
+            return new ResponseEntity<>(studentService.searchStudent(id),HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
@@ -57,7 +57,7 @@ public class StudentsController {
             if(studentsRepository.findStudentByEmail(students.getEmail()).isPresent()){
                 return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
             }
-            studentService.addStudents(students);
+            studentService.addStudent(students);
             return new ResponseEntity<>(null,HttpStatus.CREATED);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -81,7 +81,7 @@ public class StudentsController {
         if (student.getEmail().isEmpty()) { return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST); }
         if (checkController.checkLoginAdmin(email,role,token)) {
             if(studentsRepository.findStudentByEmail(student.getEmail()).isPresent()) {
-                studentService.deleteStudents(student);
+                studentService.deleteStudent(student);
                 return new ResponseEntity<>(null,HttpStatus.OK);
             }
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
