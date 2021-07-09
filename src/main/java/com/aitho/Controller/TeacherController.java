@@ -29,7 +29,7 @@ public class TeacherController {
 
     @GetMapping("/teacher")
     public ResponseEntity<List<Teacher>> getAllTeachers(@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
-        if (checkController.checkLoginStudent(email,role,token)) {
+        if (checkController.checkLoginStudent(email,role,token) || checkController.checkLoginAdmin(email,role,token)) {
             return new ResponseEntity<>(teacherService.getAllTeachers(),HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -41,38 +41,38 @@ public class TeacherController {
     }
 
    @PostMapping(path = "/teacher",consumes = "application/json")
-   public ResponseEntity<Teacher> addTeacher(@RequestBody Teacher teacher, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
-       if (teacher.getEmail().isEmpty()) { return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST); }
+   public ResponseEntity<HttpStatus>  addTeacher(@RequestBody Teacher teacher, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+       if (teacher.getEmail().isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
        if (checkController.checkLoginAdmin(email,role,token)) {
            if(teacherRepository.findTeacherByEmail(teacher.getEmail()).isPresent()){
-               return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+               return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
            }
            teacherService.addTeacher(teacher);
-           return new ResponseEntity<>(null,HttpStatus.CREATED);
+           return new ResponseEntity<>(HttpStatus.CREATED);
        }
        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
    }
 
     @PutMapping(path = "/teacher/{id}",consumes = "application/json")
-    public ResponseEntity<Teacher> updateTeachers(@PathVariable("id") String teachersID, @RequestBody String newMail, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
-        if (newMail.isEmpty()) { return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST); }
+    public ResponseEntity<HttpStatus>  updateTeachers(@PathVariable("id") String teachersID, @RequestBody String newMail, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        if (newMail.isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
         if (teacherRepository.findTeacherByEmail(newMail).isPresent()){
-            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
         if (checkController.checkLoginAdmin(email,role,token)) {
             teacherService.updateTeachertMail(teachersID,newMail);
-            return new ResponseEntity<>(null, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @DeleteMapping(path = "/teacher",consumes = "application/json")
     public ResponseEntity<HttpStatus> deleteTeacher(@RequestBody Teacher teacher, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
-        if (teacher.getEmail().isEmpty()) { return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST); }
+        if (teacher.getEmail().isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
         if (checkController.checkLoginAdmin(email,role,token)) {
             if(teacherRepository.findTeacherByEmail(teacher.getEmail()).isPresent()) {
                 teacherService.deleteTeacher(teacher);
-                return new ResponseEntity<>(null,HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.OK);
             }
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

@@ -33,7 +33,7 @@ public class StudentsController {
 
     @GetMapping("/student")
     public ResponseEntity<List<Students>> getAllStudents(@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
-        if (checkController.checkLoginTeacher(email,role,token)) {
+        if (checkController.checkLoginTeacher(email,role,token) || checkController.checkLoginAdmin(email,role,token)) {
             return new ResponseEntity<>(studentService.getAllStudents(),HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -41,7 +41,7 @@ public class StudentsController {
 
     @GetMapping("/student/{id}")
     public ResponseEntity<Optional<Students>> searchStudent(@PathVariable("id") String id, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
-        if (checkController.checkLoginTeacher(email,role,token)) {
+        if (checkController.checkLoginTeacher(email,role,token) || checkController.checkLoginAdmin(email,role,token)) {
             if (!studentsRepository.existsById(id)) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -51,38 +51,38 @@ public class StudentsController {
     }
 
     @PostMapping(path = "/student",consumes = "application/json")
-    public ResponseEntity<Students> addStudents(@RequestBody Students students, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
-        if (students.getEmail().isEmpty()) { return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST); }
+    public ResponseEntity<HttpStatus> addStudents(@RequestBody Students students, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        if (students.getEmail().isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
         if (checkController.checkLoginAdmin(email,role,token)) {
             if(studentsRepository.findStudentByEmail(students.getEmail()).isPresent()){
-                return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+                return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
             }
             studentService.addStudent(students);
-            return new ResponseEntity<>(null,HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @PutMapping(path = "/student/{id}",consumes = "application/json")
-    public ResponseEntity<Students> updateStudentMail(@PathVariable("id") String id, @RequestBody String newMail,@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
-        if (newMail.isEmpty()) { return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST); }
+    public ResponseEntity<HttpStatus>  updateStudentMail(@PathVariable("id") String id, @RequestBody String newMail,@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        if (newMail.isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
         if (studentsRepository.findStudentByEmail(newMail).isPresent()){
-            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
         if (checkController.checkLoginAdmin(email,role,token)) {
             studentService.updateStudentMail(id,newMail);
-            return new ResponseEntity<>(null, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @DeleteMapping(path = "/student",consumes = "application/json")
     public ResponseEntity<HttpStatus> deleteStudents(@RequestBody Students student, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
-        if (student.getEmail().isEmpty()) { return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST); }
+        if (student.getEmail().isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
         if (checkController.checkLoginAdmin(email,role,token)) {
             if(studentsRepository.findStudentByEmail(student.getEmail()).isPresent()) {
                 studentService.deleteStudent(student);
-                return new ResponseEntity<>(null,HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.OK);
             }
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

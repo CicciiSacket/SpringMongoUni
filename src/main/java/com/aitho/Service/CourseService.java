@@ -64,6 +64,16 @@ public class CourseService {
         courseRepository.delete(_course);
     }
 
+    public ArrayList<String> getStudentsCourse(@RequestBody String nameCourse) {
+        Optional<Course> course = courseRepository.findCourseByName(nameCourse);
+        return course.get().getStudentsId();
+    }
+
+    public ArrayList<String> getTeachersCourse(@RequestBody String nameCourse) {
+        Optional<Course> course = courseRepository.findCourseByName(nameCourse);
+        return course.get().getTeachersId();
+    }
+
     public void addStudentInCourse(@RequestBody String nameCourse, @RequestBody String mailStudents) {
         Optional<Students> students = studentsRepository.findStudentByEmail(mailStudents);
         Optional<Course> course = courseRepository.findCourseByName(nameCourse);
