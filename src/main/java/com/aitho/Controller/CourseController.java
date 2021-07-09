@@ -46,7 +46,7 @@ public class CourseController {
     }
 
     @GetMapping(path = "/course/{id}",consumes = "application/json")
-    public ResponseEntity<Course> searchCourse(@PathVariable("name") String id,@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+    public ResponseEntity<Course> searchCourse(@PathVariable("id") String id,@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
         if (checkController.checkLoginStudent(email,role,token) || checkController.checkLoginAdmin(email,role,token)) {
             if (!courseRepository.existsById(id)) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);

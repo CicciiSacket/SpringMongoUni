@@ -24,5 +24,7 @@ public class Course {
     public Course(String name, Integer CFU) {
         this.name = name;
         this.CFU = CFU;
+        this.studentsId = new ArrayList<>();
+        this.teachersId = new ArrayList<>();
     }
 }
