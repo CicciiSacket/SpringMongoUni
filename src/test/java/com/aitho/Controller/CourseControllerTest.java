@@ -208,4 +208,50 @@ public class CourseControllerTest {
                 .andExpect(status().isForbidden());
     }
 
+    //delete
+
+    @Test
+    public void getTeachersCourseTestBadRequest() throws Exception {
+        this.mockMvc.perform(get("/course/students")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON).content(""))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void getTeachersCourseTestNotFound() throws Exception {
+        this.mockMvc.perform(get("/course/students")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON).content("noName"))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getTeachersCourseTestOk() throws Exception {
+        this.mockMvc.perform(get("/course/students")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON).content("Informatica"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getTeachersCourseTestForbidden() throws Exception {
+        this.mockMvc.perform(get("/course/students")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","")
+                .contentType(MediaType.APPLICATION_JSON).content("Informatica"))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
 }
