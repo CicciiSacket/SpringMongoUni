@@ -4,14 +4,15 @@ import com.aitho.Models.Course;
 import com.aitho.Models.Students;
 import com.aitho.Models.Teacher;
 import com.aitho.Repository.CourseRepository;
+import com.aitho.Repository.StudentsRepository;
+import com.aitho.Repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,64 +21,82 @@ import java.util.stream.Collectors;
 public class CourseService {
 
     private final CourseRepository courseRepository;
+    private final StudentsRepository studentsRepository;
+    private final TeacherRepository teacherRepository;
 
     @Autowired
-    public CourseService(CourseRepository courseRepository) {
+    public CourseService(CourseRepository courseRepository, StudentsRepository studentsRepository, TeacherRepository teacherRepository) {
         this.courseRepository = courseRepository;
+        this.studentsRepository = studentsRepository;
+        this.teacherRepository = teacherRepository;
     }
 
     public List<Course> getAllCourses() { return courseRepository.findAll(); }
 
-    public Boolean existCourseById(String id) {return courseRepository.existsById(id); }
-
-    public ResponseEntity<Course> addCourse(@RequestBody Course course) {
-        try {
-            Course _course = courseRepository.save(course);
-            return new ResponseEntity<>(_course, HttpStatus.CREATED);
-        }
-        catch(Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    public Optional<Course> findCourseById(String id){
-        return courseRepository.findById(id);
-    }
-
-    public ResponseEntity<Course> findCourseByName(@PathVariable("name") String name) {
+    public Course findCourseByName(@PathVariable("name") String name) {
         Optional<Course> _course = courseRepository.findCourseByName(name);
         if(_course.isPresent()){
-            return new ResponseEntity<>(_course.get(), HttpStatus.OK);
+            return _course.get();
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    public ResponseEntity<Course> updateCourse(@PathVariable("id") String id,@RequestBody Course course) {
-        Optional<Course> courseUpgrade = courseRepository.findById(id);
-        if (courseUpgrade.isPresent()) {
-            Course _courseUpgrade = courseUpgrade.get();
-            _courseUpgrade.setCFU(course.getCFU());
-            return new ResponseEntity<>(courseRepository.save(_courseUpgrade),HttpStatus.NO_CONTENT);
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    public ResponseEntity<HttpStatus> deleteCourse(@RequestBody Course course) {
-        Optional<Course> _course = courseRepository.findById( course.getId());
-        if (_course.isPresent()) {
-            String _student = _course.get().getId();
-            courseRepository.deleteById(_student);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return null;
     }
 
     public List<Course> getCoursesFromIdList (@RequestHeader List<String> coursesID ) {
         return courseRepository.findAll().stream().filter(course -> coursesID.contains(course.getId())).collect(Collectors.toList());
     }
 
+    public void addCourse(@RequestBody Course course, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        courseRepository.save(course);
+    }
+
+
+    public void updateCourseCFU(@PathVariable("id") String id,@RequestBody Integer newCFU, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        Optional<Course> _course = courseRepository.findById(id);
+        if (_course.isPresent()) {
+            Course course = _course.get();
+            course.setCFU(newCFU);
+            courseRepository.save(course);
+        }
+    }
+
+    public void deleteCourse(@RequestBody Course course, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        Course _course = courseRepository.findCourseByName(course.getName()).get();
+        courseRepository.delete(_course);
+    }
+
+    public void addStudentInCourse(@RequestBody String nameCourse, @RequestBody String mailStudents, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        Optional<Students> students = studentsRepository.findStudentByEmail(mailStudents);
+        Optional<Course> course = courseRepository.findCourseByName(nameCourse);
+        course.get().getStudentsId().add(students.get().getId());
+    }
+
+    public void deleteStudentInCourse(@RequestBody String nameCourse, @RequestBody String mailStudents, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        Optional<Students> students = studentsRepository.findStudentByEmail(mailStudents);
+        Optional<Course> course = courseRepository.findCourseByName(nameCourse);
+        course.get().getStudentsId().remove(students.get().getId());
+    }
+
+    public void addteacherInCourse(@RequestBody String nameCourse, @RequestBody String mailTeacher, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        Optional<Teacher> teacher = teacherRepository.findTeacherByEmail(mailTeacher);
+        Optional<Course> course = courseRepository.findCourseByName(nameCourse);
+        course.get().getStudentsId().add(teacher.get().getId());
+    }
+
+    public void deleteteacherInCourse(@RequestBody String nameCourse, @RequestBody String mailTeacher, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        Optional<Teacher> teacher = teacherRepository.findTeacherByEmail(mailTeacher);
+        Optional<Course> course = courseRepository.findCourseByName(nameCourse);
+        course.get().getStudentsId().remove(teacher.get().getId());
+    }
+
+    public ArrayList<Course> searchCoursesOfTeachers(@RequestBody String teacherSurname, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        ArrayList<Course> apj = new ArrayList<>();
+        Optional<Teacher> teacher = teacherRepository.findTeacherBySurname(teacherSurname);
+        for (Course course : courseRepository.findAll()) {
+            if (course.getTeachersId().contains(teacher.get().getId())){
+                apj.add(course);
+            }
+        }
+        return apj;
+    }
 
 }

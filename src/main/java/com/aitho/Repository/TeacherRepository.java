@@ -13,5 +13,7 @@ public interface TeacherRepository extends MongoRepository<Teacher,String> {
     @Query("{email : ?0}")
     Optional<Teacher> findTeacherByEmail(String email);
 
+    @Query("{surname : ?0}")
+    Optional<Teacher> findTeacherBySurname(String surname);
 
 };
