@@ -14,4 +14,7 @@ public interface CourseRepository extends MongoRepository<Course,String> {
     @Query("{name : ?0}")
     Optional<Course> findCourseByName(String name);
 
+    @Query("{id : ?0}")
+    Optional<Course> findCourseById(String id);
+
 }

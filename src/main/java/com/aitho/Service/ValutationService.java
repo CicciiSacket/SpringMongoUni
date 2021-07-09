@@ -41,7 +41,7 @@ public class ValutationService {
 
     public ResponseEntity<Valutation> addValutation(@RequestBody Valutation valutation) {
         try{
-            Optional<Course> course = courseService.findCourseById(valutation.getId_course());
+            Optional<Course> course = Optional.ofNullable(courseService.findCourseById(valutation.getId_course()));
             Boolean teacher = teacherService.existTeacherById(valutation.getId_teacher());
             Boolean student = studentService.existStudentById(valutation.getId_student());
             if ( course.isPresent() && teacher && student){
