@@ -9,8 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -165,5 +164,48 @@ public class CourseControllerTest {
                 .andExpect(status().isForbidden());
     }
 
+    @Test
+    public void updateCourseCFUTestBadRequest() throws Exception {
+        this.mockMvc.perform(put("/course/{id}","60e869c6618c60a4050fe61a")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON).content(String.valueOf(0)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void updateCourseCFUTestOkAdmin() throws Exception {
+        this.mockMvc.perform(put("/course/{id}","60e869c6618c60a4050fe61a")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON).content(String.valueOf(13)))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void updateCourseCFUTestOkTeacher() throws Exception {
+        this.mockMvc.perform(put("/course/{id}","60e869c6618c60a4050fe61a")
+                .header("email","m.p@gmail.com")
+                .header("role","Teacher")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtLnBAZ21haWwuY29tIn0.jZIfrfERlQ7PToru0BKECmSETGzEcJ6D3GM-sXcX1qhQLbPpman9u4irr5aSgF75meTMpOkvZ4-kYIjYEycBsw")
+                .contentType(MediaType.APPLICATION_JSON).content(String.valueOf(16)))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void updateCourseCFUTestForbidden() throws Exception {
+        this.mockMvc.perform(put("/course/{id}","60e869c6618c60a4050fe61a")
+                .header("email","m.p@gmail.com")
+                .header("role","Teacher")
+                .header("token","")
+                .contentType(MediaType.APPLICATION_JSON).content(String.valueOf(16)))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
 
 }
