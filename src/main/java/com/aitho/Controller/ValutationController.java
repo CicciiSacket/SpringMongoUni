@@ -45,6 +45,7 @@ public class ValutationController {
 
     @PostMapping(path = "/valutations",consumes = "application/json")
     public ResponseEntity<Valutation> addValutation(@RequestBody Valutation valutation) {
+
         return valutationService.addValutation(valutation);
     }
 
