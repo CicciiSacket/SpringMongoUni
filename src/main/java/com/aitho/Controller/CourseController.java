@@ -1,6 +1,8 @@
 package com.aitho.Controller;
 
 import com.aitho.Models.Course;
+import com.aitho.Models.RequestForCourse;
+import com.aitho.Models.Students;
 import com.aitho.Repository.CourseRepository;
 import com.aitho.Repository.StudentsRepository;
 import com.aitho.Repository.TeacherRepository;
@@ -11,8 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @RestController
 public class CourseController {
@@ -40,7 +41,7 @@ public class CourseController {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @GetMapping("/course/search")
+    @GetMapping("/course/search") //DA TESTARE
     public ResponseEntity<List<Course>> searchFromListID(@RequestHeader List<String> id) {
         return new ResponseEntity<>(courseService.getCoursesFromIdList(id), HttpStatus.OK);
     }
@@ -79,7 +80,7 @@ public class CourseController {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @DeleteMapping(path = "/course",consumes = "application/json")
+    @DeleteMapping(path = "/course",consumes = "application/json") //DA TESTARE
     public ResponseEntity<HttpStatus> deleteCourse(@RequestBody Course course, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
         if (course.getName().isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
         if (checkController.checkLoginAdmin(email,role,token)) {
@@ -92,18 +93,18 @@ public class CourseController {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @GetMapping(path = "/course/students",consumes = "application/json")
-    public ResponseEntity<ArrayList<String>> getStudentsCourse(@RequestBody String nameCourse, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+    @GetMapping(path = "/course/students/{nameCourse}") //DA TESTARE
+    public ResponseEntity<ArrayList<String>> getStudentsCourse(@PathVariable("nameCourse") String nameCourse, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
         if (nameCourse.isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
         if (courseRepository.findCourseByName(nameCourse).isEmpty()) { return new ResponseEntity<>(HttpStatus.NOT_FOUND); }
         if (checkController.checkLoginTeacher(email,role,token) || checkController.checkLoginAdmin(email,role,token)) {
-            return new ResponseEntity<>(courseService.getStudentsCourse(nameCourse), HttpStatus.OK);
+            return new ResponseEntity<>(courseService.getStudentsCourse(nameCourse),HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @GetMapping(path = "/course/teachers",consumes = "application/json")
-    public ResponseEntity<ArrayList<String>> getTeachersCourse(@RequestBody String nameCourse, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+    @GetMapping(path = "/course/teachers/{nameCourse}",consumes = "application/json")
+    public ResponseEntity<ArrayList<String>> getTeachersCourse(@PathVariable("nameCourse") String nameCourse, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
         if (nameCourse.isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
         if (courseRepository.findCourseByName(nameCourse).isEmpty()) { return new ResponseEntity<>(HttpStatus.NOT_FOUND); }
         if (checkController.checkLoginAdmin(email,role,token)) {
@@ -112,51 +113,51 @@ public class CourseController {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @PostMapping(path = "/course/students",consumes = "application/json")
-    public ResponseEntity<HttpStatus> addStudentInCourse(@RequestBody String nameCourse, @RequestBody String mailStudents,@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
-        if (nameCourse.isEmpty() || mailStudents.isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
-        if (courseRepository.findCourseByName(nameCourse).isEmpty() || studentsRepository.findStudentByEmail(mailStudents).isEmpty()) { return new ResponseEntity<>(HttpStatus.NOT_FOUND); }
+    @PostMapping(path = "/course/students",consumes = "application/json",produces = "application/json")
+    public ResponseEntity<HttpStatus> addStudentInCourse(@RequestBody RequestForCourse requestForCourse, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        if (requestForCourse.getCourse().getName().isEmpty() || requestForCourse.getMail().isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
+        if (courseRepository.findCourseByName(requestForCourse.getCourse().getName()).isEmpty() || studentsRepository.findStudentByEmail(requestForCourse.getMail()).isEmpty()) { return new ResponseEntity<>(HttpStatus.NOT_FOUND); }
         if (checkController.checkLoginAdmin(email,role,token)) {
-            courseService.addStudentInCourse(nameCourse,mailStudents);
+            courseService.addStudentInCourse(requestForCourse);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+
+    @DeleteMapping(path = "/course/students",consumes = "application/json")//DA TESTARE
+    public ResponseEntity<HttpStatus> deleteStudentInCourse(@RequestBody RequestForCourse requestForCourse,@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        if (requestForCourse.getCourse().getName().isEmpty() || requestForCourse.getMail().isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
+        if (courseRepository.findCourseByName(requestForCourse.getCourse().getName()).isEmpty() || studentsRepository.findStudentByEmail(requestForCourse.getMail()).isEmpty()) { return new ResponseEntity<>(HttpStatus.NOT_FOUND); }
+        if (checkController.checkLoginAdmin(email,role,token)) {
+            courseService.deleteStudentInCourse(requestForCourse);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @DeleteMapping(path = "/course/students",consumes = "application/json")
-    public ResponseEntity<HttpStatus> deleteStudentInCourse(@RequestBody String nameCourse, @RequestBody String mailStudents,@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
-        if (nameCourse.isEmpty() || mailStudents.isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
-        if (courseRepository.findCourseByName(nameCourse).isEmpty() || studentsRepository.findStudentByEmail(mailStudents).isEmpty()) { return new ResponseEntity<>(HttpStatus.NOT_FOUND); }
+    @PostMapping(path = "/course/teachers",consumes = "application/json")//DA TESTARE
+    public ResponseEntity<HttpStatus> addTeacherInCourse(@RequestBody RequestForCourse requestForCourse ,@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        if (requestForCourse.getCourse().getName().isEmpty() || requestForCourse.getMail().isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
+        if (courseRepository.findCourseByName(requestForCourse.getCourse().getName()).isEmpty() || teacherRepository.findTeacherByEmail(requestForCourse.getMail()).isEmpty()) { return new ResponseEntity<>(HttpStatus.NOT_FOUND); }
         if (checkController.checkLoginAdmin(email,role,token)) {
-            courseService.deleteStudentInCourse(nameCourse,mailStudents);
+            courseService.addTeacherInCourse(requestForCourse);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @PostMapping(path = "/course/teachers",consumes = "application/json")
-    public ResponseEntity<HttpStatus> addTeacherInCourse(@RequestBody String nameCourse, @RequestBody String mailTeacher,@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
-        if (nameCourse.isEmpty() || mailTeacher.isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
-        if (courseRepository.findCourseByName(nameCourse).isEmpty() || teacherRepository.findTeacherByEmail(mailTeacher).isEmpty()) { return new ResponseEntity<>(HttpStatus.NOT_FOUND); }
+    @DeleteMapping(path = "/course/teachers",consumes = "application/json")//DA TESTARE
+    public ResponseEntity<HttpStatus> deleteTeacherInCourse(@RequestBody RequestForCourse requestForCourse,@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        if (requestForCourse.getCourse().getName().isEmpty() || requestForCourse.getMail().isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
+        if (courseRepository.findCourseByName(requestForCourse.getCourse().getName()).isEmpty() || teacherRepository.findTeacherByEmail(requestForCourse.getMail()).isEmpty()) { return new ResponseEntity<>(HttpStatus.NOT_FOUND); }
         if (checkController.checkLoginAdmin(email,role,token)) {
-            courseService.addteacherInCourse(nameCourse,mailTeacher);
+            courseService.deleteTeacherInCourse(requestForCourse);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @DeleteMapping(path = "/course/teachers",consumes = "application/json")
-    public ResponseEntity<HttpStatus> deleteTeacherInCourse(@RequestBody String nameCourse, @RequestBody String mailTeacher,@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
-        if (nameCourse.isEmpty() || mailTeacher.isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
-        if (courseRepository.findCourseByName(nameCourse).isEmpty() || teacherRepository.findTeacherByEmail(mailTeacher).isEmpty()) { return new ResponseEntity<>(HttpStatus.NOT_FOUND); }
-        if (checkController.checkLoginAdmin(email,role,token)) {
-            courseService.deleteteacherInCourse(nameCourse,mailTeacher);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-    }
-
-    @GetMapping(path = "/course/teachers/info",consumes = "application/json")
+    @GetMapping(path = "/course/teachers/info",consumes = "application/json")//DA TESTARE
     public ResponseEntity<ArrayList<Course>> getCoursesFromTeacherId(@RequestBody String teacherSurname, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
        if (teacherSurname.isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
        if (teacherRepository.findTeacherBySurname(teacherSurname).isEmpty()) { return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
