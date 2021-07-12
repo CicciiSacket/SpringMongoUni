@@ -1,1 +1,32 @@
-<p>teacher-page works!</p>
+<div class="row justify-content-center mt-5 pt-5">
+    <div class="col-sm-12 col-md-3">
+        <form class="row shadow-lg p-3 mb-5">
+            <h2>Aggiungi una valutazione</h2>
+            <span class="select-title">Corso</span>
+            <mat-form-field>
+                <mat-select placeholder="Selezione un corso" [(value)]="selectedCourse">
+                    <mat-option>None</mat-option>
+                  <mat-option *ngFor="let course of courses; index as index" [value]="index">
+                    {{course.name}}
+                  </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <span *ngIf="selectedCourse >= 0" class="select-title d-inline-block">Studente</span>
+            <mat-form-field *ngIf="selectedCourse >= 0">
+                <mat-select placeholder="Selezione studente" [(value)]="selectedStudent">
+                    <mat-option>None</mat-option>
+                    <mat-option *ngFor="let student of courses[selectedCourse].students" [value]="student.id">
+                        {{student.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <span *ngIf="selectedStudent" class="select-title d-inline-block">Voto</span>
+            <mat-form-field *ngIf="selectedStudent">
+                <mat-label>Voto</mat-label>
+                <input matInput type="number" placeholder="Ex.10" [formControl]="voteValidation">
+                <mat-error *ngIf="voteValidation.invalid">{{getErrorMessage()}}</mat-error>
+            </mat-form-field>
+            <input (click)="postValutation()" class="btn btn-lg btn-primary btn-block" type="submit" value="Login">
+        </form>
+    </div>
+</div>

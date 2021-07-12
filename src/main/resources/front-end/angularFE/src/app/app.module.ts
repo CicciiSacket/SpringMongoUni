@@ -22,6 +22,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input'; 
 import { MatRadioModule } from '@angular/material/radio';
 import { MatListModule } from '@angular/material/list'; 
+import { MatSelectModule } from '@angular/material/select';
 
 
 
@@ -44,7 +45,8 @@ import { MatListModule } from '@angular/material/list';
     MatFormFieldModule,
     MatListModule,
     MatInputModule,
-    MatRadioModule
+    MatRadioModule,
+    MatSelectModule
   ],
   providers: [
     StudentService

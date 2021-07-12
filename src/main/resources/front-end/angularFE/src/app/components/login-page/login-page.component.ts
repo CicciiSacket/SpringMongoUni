@@ -18,21 +18,18 @@ export class LoginPageComponent implements OnInit {
   }
 
   formLogin(): void {
-    if(this.role == "Student"){
-      this.authServiceService.loginStudent(this.email, this.password, this.role).then((response) => {
-        if(response.token){
-          localStorage.setItem("token", response.token);
-          localStorage.setItem("role", this.role);
-          localStorage.setItem("email", this.email);
-          this.dataShareService.getUserRole.next(this.role)
-          this.dataShareService.isUserLoggedIn.next(true)
-          this.router.navigate(['/student'])
-        }else{
-          alert("Hai sbagliato bro ripova :)")
-        }
-      })
-    }else if(this.role == "Teacher"){
-    }
+    this.authServiceService.login(this.email, this.password, this.role).then((response) => {
+      if(response.token){
+        localStorage.setItem("token", response.token);
+        localStorage.setItem("role", this.role);
+        localStorage.setItem("email", this.email);
+        this.dataShareService.getUserRole.next(this.role)
+        this.dataShareService.isUserLoggedIn.next(true)
+        this.router.navigate(['/'+this.role.toLowerCase()])
+      }else{
+        alert("Hai sbagliato bro ripova :)")
+      }
+    })
   }
 
 }

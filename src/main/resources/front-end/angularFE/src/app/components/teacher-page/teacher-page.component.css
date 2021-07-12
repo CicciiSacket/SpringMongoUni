@@ -1,0 +1,9 @@
+.mat-select-panel{
+    margin-top: 1em;
+}
+
+.select-title{
+    margin-bottom: 0.7em;
+    font-size: 1.15em;
+    color: rgba(0, 0, 0, 0.8);   
+}

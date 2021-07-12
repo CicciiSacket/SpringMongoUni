@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Student, StudentRes } from '../interface/student';
+import { LoginRes } from '../interface/auth';
 import { Teacher } from '../interface/teacher';
 import { Router } from '@angular/router';
 
@@ -20,7 +21,7 @@ export class AuthServiceService {
   signupTeacher = async (teacher: Teacher): Promise<Teacher> => 
     await this.client.post(this.uriTeacher, teacher).toPromise() as Promise<Teacher>
     
-  loginStudent = async (email: string, password: string, role: string): Promise<StudentRes> =>
-    await this.client.post(this.uriLogin + "/" + role.toLowerCase(), {email, password, role}).toPromise() as Promise<StudentRes>
+  login = async (email: string, password: string, role: string): Promise<LoginRes> =>
+    await this.client.post(this.uriLogin + "/" + role.toLowerCase(), {email, password, role}).toPromise() as Promise<LoginRes>
 
 }
