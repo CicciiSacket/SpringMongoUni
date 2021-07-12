@@ -1,6 +1,7 @@
 package com.aitho.Service;
 
 import com.aitho.Models.Course;
+import com.aitho.Models.RequestForCourse;
 import com.aitho.Models.Students;
 import com.aitho.Models.Teacher;
 import com.aitho.Repository.CourseRepository;
@@ -35,10 +36,7 @@ public class CourseService {
 
     public Course findCourseById(@PathVariable("id") String id) {
         Optional<Course> _course = courseRepository.findCourseById(id);
-        if(_course.isPresent()){
-            return _course.get();
-        }
-        return null;
+        return _course.orElse(null);
     }
 
     public List<Course> getCoursesFromIdList (@RequestHeader List<String> coursesID ) {
@@ -64,38 +62,60 @@ public class CourseService {
         courseRepository.delete(_course);
     }
 
-    public ArrayList<String> getStudentsCourse(@RequestBody String nameCourse) {
+    public ArrayList<String> getStudentsCourse(@PathVariable("nameCourse") String nameCourse) {
         Optional<Course> course = courseRepository.findCourseByName(nameCourse);
-        return course.get().getStudentsId();
+        if (course.isPresent()){
+            return course.get().getStudentsId();
+        }
+        return new ArrayList<String>();
     }
 
     public ArrayList<String> getTeachersCourse(@RequestBody String nameCourse) {
         Optional<Course> course = courseRepository.findCourseByName(nameCourse);
-        return course.get().getTeachersId();
+        if (course.isPresent()){
+            return course.get().getTeachersId();
+        }
+        return new ArrayList<String>();
     }
 
-    public void addStudentInCourse(@RequestBody String nameCourse, @RequestBody String mailStudents) {
-        Optional<Students> students = studentsRepository.findStudentByEmail(mailStudents);
-        Optional<Course> course = courseRepository.findCourseByName(nameCourse);
-        course.get().getStudentsId().add(students.get().getId());
+    public void addStudentInCourse(@RequestBody RequestForCourse requestForCourse) {
+        Optional<Students> students = studentsRepository.findStudentByEmail(requestForCourse.getMail());
+        Optional<Course> _course = courseRepository.findCourseByName(requestForCourse.getCourse().getName());
+        if (_course.isPresent() && students.isPresent()) {
+            Course course = _course.get();
+            course.getStudentsId().add(students.get().getId());
+            courseRepository.save(course);
+        }
     }
 
-    public void deleteStudentInCourse(@RequestBody String nameCourse, @RequestBody String mailStudents) {
-        Optional<Students> students = studentsRepository.findStudentByEmail(mailStudents);
-        Optional<Course> course = courseRepository.findCourseByName(nameCourse);
-        course.get().getStudentsId().remove(students.get().getId());
+    public void deleteStudentInCourse(@RequestBody RequestForCourse requestForCourse) {
+        Optional<Students> students = studentsRepository.findStudentByEmail(requestForCourse.getMail());
+        Optional<Course> _course = courseRepository.findCourseByName(requestForCourse.getCourse().getName());
+        if (_course.isPresent() && students.isPresent()) {
+            Course course = _course.get();
+            course.getStudentsId().remove(students.get().getId());
+            courseRepository.save(course);
+        }
     }
 
-    public void addteacherInCourse(@RequestBody String nameCourse, @RequestBody String mailTeacher) {
-        Optional<Teacher> teacher = teacherRepository.findTeacherByEmail(mailTeacher);
-        Optional<Course> course = courseRepository.findCourseByName(nameCourse);
-        course.get().getStudentsId().add(teacher.get().getId());
+    public void addTeacherInCourse(@RequestBody RequestForCourse requestForCourse) {
+        Optional<Teacher> teacher = teacherRepository.findTeacherByEmail(requestForCourse.getMail());
+        Optional<Course> _course = courseRepository.findCourseByName(requestForCourse.getCourse().getName());
+        if (_course.isPresent() && teacher.isPresent()) {
+            Course course = _course.get();
+            course.getStudentsId().add(teacher.get().getId());
+            courseRepository.save(course);
+        }
     }
 
-    public void deleteteacherInCourse(@RequestBody String nameCourse, @RequestBody String mailTeacher) {
-        Optional<Teacher> teacher = teacherRepository.findTeacherByEmail(mailTeacher);
-        Optional<Course> course = courseRepository.findCourseByName(nameCourse);
-        course.get().getStudentsId().remove(teacher.get().getId());
+    public void deleteTeacherInCourse(@RequestBody RequestForCourse requestForCourse) {
+        Optional<Teacher> teacher = teacherRepository.findTeacherByEmail(requestForCourse.getMail());
+        Optional<Course> _course = courseRepository.findCourseByName(requestForCourse.getCourse().getName());
+        if (_course.isPresent() && teacher.isPresent()) {
+            Course course = _course.get();
+            course.getStudentsId().remove(teacher.get().getId());
+            courseRepository.save(course);
+        }
     }
 
     public ArrayList<Course> searchCoursesOfTeachers(@RequestBody String teacherSurname) {
