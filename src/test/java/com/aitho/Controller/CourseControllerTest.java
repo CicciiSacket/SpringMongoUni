@@ -623,12 +623,13 @@ public class CourseControllerTest {
     }
     
     @Test
-    public void getCoursesFromTeacherSurnameTestOk() throws Exception {
+    public void getCoursesFromTeacherEmailTestOk() throws Exception {
         this.mockMvc.perform(get("/course/teachers/info")
                 .header("email", "mario@")
                 .header("role", "Admin")
                 .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
-                .contentType(MediaType.APPLICATION_JSON).content("Palladio"))
+                .header("emailLogin", "m.p@gmail.com")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

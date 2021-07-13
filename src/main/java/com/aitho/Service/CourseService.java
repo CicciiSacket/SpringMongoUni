@@ -118,12 +118,14 @@ public class CourseService {
         }
     }
 
-    public ArrayList<Course> searchCoursesOfTeachers(@RequestBody String teacherSurname) {
+    public ArrayList<Course> searchCoursesOfTeachers(@RequestHeader("email") String email) {
         ArrayList<Course> apj = new ArrayList<>();
-        Optional<Teacher> teacher = teacherRepository.findTeacherBySurname(teacherSurname);
+        Optional<Teacher> teacher = teacherRepository.findTeacherByEmail(email);
         for (Course course : courseRepository.findAll()) {
-            if (course.getTeachersId().contains(teacher.get().getId())){
-                apj.add(course);
+            if(teacher.isPresent()) {
+                if (course.getTeachersId().contains(teacher.get().getId())){
+                    apj.add(course);
+                }
             }
         }
         return apj;
