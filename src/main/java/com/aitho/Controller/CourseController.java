@@ -158,7 +158,7 @@ public class CourseController {
     }
 
     @GetMapping(path = "/course/teachers/info",consumes = "application/json")//DA TESTARE
-    public ResponseEntity<ArrayList<Course>> getCoursesFromTeacherId(@RequestBody String teacherSurname, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+    public ResponseEntity<ArrayList<Course>> getCoursesFromTeacheSurname(@RequestBody String teacherSurname, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
        if (teacherSurname.isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
        if (teacherRepository.findTeacherBySurname(teacherSurname).isEmpty()) { return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
         if (checkController.checkLoginAdmin(email,role,token) || checkController.checkLoginStudent(email,role,token)) {
