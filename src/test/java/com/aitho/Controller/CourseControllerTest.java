@@ -129,6 +129,21 @@ public class CourseControllerTest {
     }
 
     @Test
+    public void deleteCourseTestBadRequest() throws Exception {
+        Course testCourse = new Course("",16);
+        ObjectMapper resultTestStudent = new ObjectMapper();
+        String trueResult = resultTestStudent.writeValueAsString(testCourse);
+
+        this.mockMvc.perform(delete("/course")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON).content(trueResult))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void addCourseTestOk() throws Exception {
         Course testCourse = new Course("lillo",90);
         ObjectMapper resultTestStudent = new ObjectMapper();
@@ -142,6 +157,21 @@ public class CourseControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated());
     }
+
+    @Test
+    public void deleteCourseTestOk() throws Exception {
+        ObjectMapper resultTestStudent = new ObjectMapper();
+        String trueResult = resultTestStudent.writeValueAsString(_course);
+
+        this.mockMvc.perform(delete("/course")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON).content(trueResult))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
 
     @Test
     public void addCourseTestNotAcceptable() throws Exception {
@@ -165,6 +195,21 @@ public class CourseControllerTest {
         String trueResult = resultTestStudent.writeValueAsString(testCourse);
 
         this.mockMvc.perform(post("/course")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","")
+                .contentType(MediaType.APPLICATION_JSON).content(trueResult))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void deleteCourseTestForbidden() throws Exception {
+        Course testCourse = new Course("Informatica",16);
+        ObjectMapper resultTestStudent = new ObjectMapper();
+        String trueResult = resultTestStudent.writeValueAsString(testCourse);
+
+        this.mockMvc.perform(delete("/course")
                 .header("email","mario@")
                 .header("role","Admin")
                 .header("token","")
@@ -217,10 +262,8 @@ public class CourseControllerTest {
                 .andExpect(status().isForbidden());
     }
 
-    //delete
-
     @Test
-    public void getTeachersCourseTestBadRequest() throws Exception {
+    public void getStudentsCourseTestBadRequest() throws Exception {
         this.mockMvc.perform(get("/course/students","")
                 .header("email","mario@")
                 .header("role","Admin")
@@ -231,7 +274,7 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void getTeachersCourseTestNotFound() throws Exception {
+    public void getStudentsCourseTestNotFound() throws Exception {
         this.mockMvc.perform(get("/course/students","noName")
                 .header("email","mario@")
                 .header("role","Admin")
@@ -242,7 +285,7 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void getTeachersCourseTestOk() throws Exception {
+    public void getStudentsCourseTestOk() throws Exception {
         this.mockMvc.perform(get("/course/students/{nameCourse}","Informatica")
                 .header("email","mario@")
                 .header("role","Admin")
@@ -253,7 +296,7 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void getTeachersCourseTestForbidden() throws Exception {
+    public void getStudentsCourseTestForbidden() throws Exception {
         this.mockMvc.perform(get("/course/students","Informatica")
                 .header("email","mario@")
                 .header("role","Admin")
@@ -262,7 +305,50 @@ public class CourseControllerTest {
                 .andDo(print())
                 .andExpect(status().isForbidden());
     }
-    //fin qui..
+
+    @Test
+    public void getTeachersCourseTestForbidden() throws Exception {
+        this.mockMvc.perform(get("/course/teachers/{nameCourse}","Informatica")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void getTeachersCourseTestOk() throws Exception {
+        this.mockMvc.perform(get("/course/teachers/{nameCourse}","Informatica")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getTeachersCourseTestNotFound() throws Exception {
+        this.mockMvc.perform(get("/course/students/{nameCourse}","noName")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getTeachersCourseTestBadRequest() throws Exception {
+        this.mockMvc.perform(get("/course/teachers","")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
 
     @Test
     public void addStudentInCourseTestBadRequestNameCourse() throws Exception {
@@ -270,7 +356,7 @@ public class CourseControllerTest {
         ObjectMapper resultTest = new ObjectMapper();
         String trueResult = resultTest.writeValueAsString(requestForCourse);
 
-        this.mockMvc.perform(post("/course/students")
+        this.mockMvc.perform(post("/course/students/{nameCourse}")
                 .header("email", "mario@")
                 .header("role", "Admin")
                 .header("token", "")
@@ -578,6 +664,16 @@ public class CourseControllerTest {
                 .contentType(MediaType.APPLICATION_JSON).content("Palladio"))
                 .andDo(print())
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void searchFromListIDTest() throws Exception {
+        this.mockMvc.perform(get("/course/search")
+                .header("id","60e2cf979c1e853d3f958a5a")//0
+                .header("id","60e870d43281d272fbc6c4d2")//1
+                .header("id","60e2cf9c1e853d3f958a5a"))//0
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
 
