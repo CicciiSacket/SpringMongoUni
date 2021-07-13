@@ -158,11 +158,11 @@ public class CourseController {
     }
 
     @GetMapping(path = "/course/teachers/info",consumes = "application/json")
-    public ResponseEntity<ArrayList<Course>> getCoursesFromTeacherEmail(@RequestHeader (value="emailLogin") String emailLogin, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
-       if (emailLogin.isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
-       if (teacherRepository.findTeacherByEmail(emailLogin).isEmpty()) { return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
+    public ResponseEntity<List<Course>> getCoursesFromTeacherEmail(@RequestHeader(value="queryEmail") String queryEmail, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+       if (queryEmail.isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
+       if (teacherRepository.findTeacherByEmail(queryEmail).isEmpty()) { return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
         if (checkController.checkLoginAdmin(email,role,token) || checkController.checkLoginTeacher(email,role,token)) {
-            return new ResponseEntity<>(courseService.searchCoursesOfTeachers(emailLogin),HttpStatus.OK);
+            return new ResponseEntity<>(courseService.searchCoursesOfTeachers(queryEmail),HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
