@@ -103,7 +103,7 @@ public class CourseService {
         Optional<Course> _course = courseRepository.findCourseByName(requestForCourse.getCourse().getName());
         if (_course.isPresent() && teacher.isPresent()) {
             Course course = _course.get();
-            course.getStudentsId().add(teacher.get().getId());
+            course.getTeachersId().add(teacher.get().getId());
             courseRepository.save(course);
         }
     }
@@ -113,7 +113,7 @@ public class CourseService {
         Optional<Course> _course = courseRepository.findCourseByName(requestForCourse.getCourse().getName());
         if (_course.isPresent() && teacher.isPresent()) {
             Course course = _course.get();
-            course.getStudentsId().remove(teacher.get().getId());
+            course.getTeachersId().remove(teacher.get().getId());
             courseRepository.save(course);
         }
     }

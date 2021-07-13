@@ -416,4 +416,126 @@ public class CourseControllerTest {
             .andExpect(status().isForbidden());
     }
 
+    @Test
+    public void addTeacherInCourseTestOK() throws Exception {
+        RequestForCourse requestForCourse = new RequestForCourse(_course, "m.p@gmail.com");
+        ObjectMapper resultTest = new ObjectMapper();
+        String trueResult = resultTest.writeValueAsString(requestForCourse);
+
+        this.mockMvc.perform(post("/course/teachers")
+                .header("email", "mario@")
+                .header("role", "Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON).content(trueResult))
+                .andDo(print())
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void addTeacherInCourseTestForbidden() throws Exception {
+        RequestForCourse requestForCourse = new RequestForCourse(_course, "m.p@gmail.com");
+        ObjectMapper resultTest = new ObjectMapper();
+        String trueResult = resultTest.writeValueAsString(requestForCourse);
+
+        this.mockMvc.perform(post("/course/teachers")
+                .header("email", "mario@")
+                .header("role", "Admin")
+                .header("token","")
+                .contentType(MediaType.APPLICATION_JSON).content(trueResult))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void addTeacherInCourseTestBadRequest() throws Exception {
+        RequestForCourse requestForCourse = new RequestForCourse(_course, "");
+        ObjectMapper resultTest = new ObjectMapper();
+        String trueResult = resultTest.writeValueAsString(requestForCourse);
+
+        this.mockMvc.perform(post("/course/teachers")
+                .header("email", "mario@")
+                .header("role", "Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON).content(trueResult))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void addTeacherInCourseTestNotFoundMail() throws Exception {
+        RequestForCourse requestForCourse = new RequestForCourse(_course, "nn");
+        ObjectMapper resultTest = new ObjectMapper();
+        String trueResult = resultTest.writeValueAsString(requestForCourse);
+
+        this.mockMvc.perform(post("/course/teachers")
+                .header("email", "mario@")
+                .header("role", "Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON).content(trueResult))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void deleteTeacherInCourseTestNotFoundMail() throws Exception {
+        RequestForCourse requestForCourse = new RequestForCourse(_course, "nn");
+        ObjectMapper resultTest = new ObjectMapper();
+        String trueResult = resultTest.writeValueAsString(requestForCourse);
+
+        this.mockMvc.perform(delete("/course/teachers")
+                .header("email", "mario@")
+                .header("role", "Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON).content(trueResult))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void deleteTeacherInCourseTestBadRequest() throws Exception {
+        RequestForCourse requestForCourse = new RequestForCourse(_course, "");
+        ObjectMapper resultTest = new ObjectMapper();
+        String trueResult = resultTest.writeValueAsString(requestForCourse);
+
+        this.mockMvc.perform(delete("/course/teachers")
+                .header("email", "mario@")
+                .header("role", "Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON).content(trueResult))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void deleteTeacherInCourseTestForbidden() throws Exception {
+        RequestForCourse requestForCourse = new RequestForCourse(_course, "m.p@gmail.com");
+        ObjectMapper resultTest = new ObjectMapper();
+        String trueResult = resultTest.writeValueAsString(requestForCourse);
+
+        this.mockMvc.perform(delete("/course/teachers")
+                .header("email", "mario@")
+                .header("role", "Admin")
+                .header("token","")
+                .contentType(MediaType.APPLICATION_JSON).content(trueResult))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void deleteTeacherInCourseTestOK() throws Exception {
+        RequestForCourse requestForCourse = new RequestForCourse(_course, "m.p@gmail.com");
+        ObjectMapper resultTest = new ObjectMapper();
+        String trueResult = resultTest.writeValueAsString(requestForCourse);
+
+        this.mockMvc.perform(delete("/course/teachers")
+                .header("email", "mario@")
+                .header("role", "Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON).content(trueResult))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+
+
 }
