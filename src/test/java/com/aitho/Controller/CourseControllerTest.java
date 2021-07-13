@@ -3,6 +3,7 @@ package com.aitho.Controller;
 import com.aitho.Models.Course;
 import com.aitho.Models.RequestForCourse;
 import com.aitho.Repository.CourseRepository;
+import com.aitho.Service.CourseService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -10,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
@@ -25,9 +28,7 @@ public class CourseControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    @Mock
-    private CourseRepository courseRepository;
-
+    private Course _course = new Course("lillo",90);
 
     @Test
     public void getAllCoursesTestOkStudent() throws Exception {
@@ -129,7 +130,7 @@ public class CourseControllerTest {
 
     @Test
     public void addCourseTestOk() throws Exception {
-        Course testCourse = new Course("Religione",16);
+        Course testCourse = new Course("lillo",90);
         ObjectMapper resultTestStudent = new ObjectMapper();
         String trueResult = resultTestStudent.writeValueAsString(testCourse);
 
@@ -265,114 +266,154 @@ public class CourseControllerTest {
 
     @Test
     public void addStudentInCourseTestBadRequestNameCourse() throws Exception {
-        Optional<Course> course = courseRepository.findCourseByName("");
-        if (course.isPresent()) {
-            Course _course = course.get();
-            RequestForCourse requestForCourse = new RequestForCourse(_course, "pippo");
-            ObjectMapper resultTest = new ObjectMapper();
-            String trueResult = resultTest.writeValueAsString(requestForCourse);
+        RequestForCourse requestForCourse = new RequestForCourse(_course, "pippo");
+        ObjectMapper resultTest = new ObjectMapper();
+        String trueResult = resultTest.writeValueAsString(requestForCourse);
 
-            this.mockMvc.perform(post("/course/students")
-                    .header("email", "mario@")
-                    .header("role", "Admin")
-                    .header("token", "")
-                    .contentType(MediaType.APPLICATION_JSON).content(trueResult))
-                    .andDo(print())
-                    .andExpect(status().isBadRequest());
-        }
+        this.mockMvc.perform(post("/course/students")
+                .header("email", "mario@")
+                .header("role", "Admin")
+                .header("token", "")
+                .contentType(MediaType.APPLICATION_JSON).content(trueResult))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
+
 
     @Test
     public void addStudentInCourseTestBadRequestMailStudent() throws Exception {
-        Optional<Course> course = courseRepository.findCourseByName("Matematica");
-        if (course.isPresent()) {
-            Course _course = course.get();
-            RequestForCourse requestForCourse = new RequestForCourse(_course, "");
-            ObjectMapper resultTest = new ObjectMapper();
-            String trueResult = resultTest.writeValueAsString(requestForCourse);
-            this.mockMvc.perform(post("/course/students")
-                    .header("email", "mario@")
-                    .header("role", "Admin")
-                    .header("token", "")
-                    .contentType(MediaType.APPLICATION_JSON).content(trueResult))
-                    .andDo(print())
-                    .andExpect(status().isBadRequest());
-        }
+        RequestForCourse requestForCourse = new RequestForCourse(_course, "");
+        ObjectMapper resultTest = new ObjectMapper();
+        String trueResult = resultTest.writeValueAsString(requestForCourse);
+        this.mockMvc.perform(post("/course/students")
+                .header("email", "mario@")
+                .header("role", "Admin")
+                .header("token", "")
+                .contentType(MediaType.APPLICATION_JSON).content(trueResult))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
+
 
     @Test
     public void addStudentInCourseTestNotFoundCourse() throws Exception {
-        Optional<Course> course = courseRepository.findCourseByName("LILLA");
-        if (course.isPresent()) {
-            Course _course = course.get();
-            RequestForCourse requestForCourse = new RequestForCourse(_course,"pippo");
-            ObjectMapper resultTest = new ObjectMapper();
-            String trueResult = resultTest.writeValueAsString(requestForCourse);
-            this.mockMvc.perform(post("/course/students")
-                    .header("email","mario@")
-                    .header("role","Admin")
-                    .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
-                    .contentType(MediaType.APPLICATION_JSON).content(trueResult))
-                    .andDo(print())
-                    .andExpect(status().isNotFound());
-        }
+        RequestForCourse requestForCourse = new RequestForCourse(_course,"pippo");
+        ObjectMapper resultTest = new ObjectMapper();
+        String trueResult = resultTest.writeValueAsString(requestForCourse);
+        this.mockMvc.perform(post("/course/students")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON).content(trueResult))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
+
 
     @Test
     public void addStudentInCourseTestNotFoundStudents() throws Exception {
-        Optional<Course> course = courseRepository.findCourseByName("Matematica");
-        if (course.isPresent()){
-            Course _course = course.get();
-            RequestForCourse requestForCourse = new RequestForCourse(_course,"nonesiste");
-            ObjectMapper resultTest = new ObjectMapper();
-            String trueResult = resultTest.writeValueAsString(requestForCourse);
-            this.mockMvc.perform(post("/course/students")
-                    .header("email","mario@")
-                    .header("role","Admin")
-                    .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
-                    .contentType(MediaType.APPLICATION_JSON).content(trueResult))
-                    .andDo(print())
-                    .andExpect(status().isNotFound());
-        }
+        RequestForCourse requestForCourse = new RequestForCourse(_course,"nonesiste");
+        ObjectMapper resultTest = new ObjectMapper();
+        String trueResult = resultTest.writeValueAsString(requestForCourse);
+        this.mockMvc.perform(post("/course/students")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON).content(trueResult))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
+
 
     @Test
     public void addStudentInCourseTestOk() throws Exception {
-        Optional<Course> course = courseRepository.findCourseByName("Matematica");
-        if (course.isPresent()) {
-            Course _course = course.get();
-            RequestForCourse requestForCourse = new RequestForCourse(_course,"pippo");
-            ObjectMapper resultTest = new ObjectMapper();
-            String trueResult = resultTest.writeValueAsString(requestForCourse);
+        RequestForCourse requestForCourse = new RequestForCourse(_course,"pippo");
+        ObjectMapper resultTest = new ObjectMapper();
+        String trueResult = resultTest.writeValueAsString(requestForCourse);
 
-            this.mockMvc.perform(post("/course/students")
-                    .header("email","mario@")
-                    .header("role","Admin")
-                    .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
-                    .contentType(MediaType.APPLICATION_JSON).content(trueResult))
-                    .andDo(print())
-                    .andExpect(status().isCreated());
-        }
+        this.mockMvc.perform(post("/course/students")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON).content(trueResult))
+                .andDo(print())
+                .andExpect(status().isCreated());
     }
 
     @Test
     public void addStudentInCourseTestForbidden() throws Exception {
-        Optional<Course> course = courseRepository.findCourseByName("Matematica");
-        if (course.isPresent()){
-            Course _course = course.get();
-            RequestForCourse requestForCourse = new RequestForCourse(_course,"pippo");
-            ObjectMapper resultTest = new ObjectMapper();
-            String trueResult = resultTest.writeValueAsString(requestForCourse);
+        RequestForCourse requestForCourse = new RequestForCourse(_course,"pippo");
+        ObjectMapper resultTest = new ObjectMapper();
+        String trueResult = resultTest.writeValueAsString(requestForCourse);
 
-            this.mockMvc.perform(post("/course/students")
-                    .header("email","mario@")
-                    .header("role","Admin")
-                    .header("token","")
-                    .contentType(MediaType.APPLICATION_JSON).content(trueResult))
-                    .andDo(print())
-                    .andExpect(status().isForbidden());
-        }
+        this.mockMvc.perform(post("/course/students")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","")
+                .contentType(MediaType.APPLICATION_JSON).content(trueResult))
+                .andDo(print())
+                .andExpect(status().isForbidden());
     }
 
+    @Test
+    public void deleteStudentInCourseTestOk() throws Exception {
+        RequestForCourse requestForCourse = new RequestForCourse(_course,"pippo");
+        ObjectMapper resultTest = new ObjectMapper();
+        String trueResult = resultTest.writeValueAsString(requestForCourse);
+
+        this.mockMvc.perform(delete("/course/students")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON).content(trueResult))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+
+    @Test
+    public void deleteStudentInCourseTestBadRequestCourse() throws Exception {
+        RequestForCourse requestForCourse = new RequestForCourse(_course,"pippo");
+        ObjectMapper resultTest = new ObjectMapper();
+        String trueResult = resultTest.writeValueAsString(requestForCourse);
+
+        this.mockMvc.perform(delete("/course/students")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON).content(trueResult))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void deleteStudentInCourseTestBadRequestMail() throws Exception {
+        RequestForCourse requestForCourse = new RequestForCourse(_course,"");
+        ObjectMapper resultTest = new ObjectMapper();
+        String trueResult = resultTest.writeValueAsString(requestForCourse);
+
+        this.mockMvc.perform(delete("/course/students")
+                .header("email","mario@")
+                .header("role","Admin")
+                .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
+                .contentType(MediaType.APPLICATION_JSON).content(trueResult))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    public void deleteStudentInCourseTestForbidden() throws Exception {
+        RequestForCourse requestForCourse = new RequestForCourse(_course, "pippo");
+        ObjectMapper resultTest = new ObjectMapper();
+        String trueResult = resultTest.writeValueAsString(requestForCourse);
+        this.mockMvc.perform(delete("/course/students")
+            .header("email","mario@")
+            .header("role","Admin")
+            .header("token","")
+            .contentType(MediaType.APPLICATION_JSON).content(trueResult))
+            .andDo(print())
+            .andExpect(status().isForbidden());
+    }
 
 }
