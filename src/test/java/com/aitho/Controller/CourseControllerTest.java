@@ -28,7 +28,7 @@ public class CourseControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    private Course _course = new Course("lillo",90);
+    private Course _course = new Course("Materia",90);
 
     @Test
     public void getAllCoursesTestOkStudent() throws Exception {
@@ -640,7 +640,7 @@ public class CourseControllerTest {
                 .header("email", "mario@")
                 .header("role", "Admin")
                 .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
-                .contentType(MediaType.APPLICATION_JSON).content(""))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -649,9 +649,10 @@ public class CourseControllerTest {
     public void getCoursesFromTeacherSurnameTestNotFound() throws Exception {
         this.mockMvc.perform(get("/course/teachers/info")
                 .header("email", "mario@")
+                .header("emailLogin", "mario@")
                 .header("role", "Admin")
                 .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
-                .contentType(MediaType.APPLICATION_JSON).content("Palladino"))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -660,9 +661,10 @@ public class CourseControllerTest {
     public void getCoursesFromTeacherSurnameTestForbidden() throws Exception {
         this.mockMvc.perform(get("/course/teachers/info")
                 .header("email", "mario@")
+                .header("emailLogin", "mario@")
                 .header("role", "Admin")
                 .header("token","")
-                .contentType(MediaType.APPLICATION_JSON).content("Palladio"))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isForbidden());
     }
