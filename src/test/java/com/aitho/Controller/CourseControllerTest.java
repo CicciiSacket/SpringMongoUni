@@ -2,21 +2,13 @@ package com.aitho.Controller;
 
 import com.aitho.Models.Course;
 import com.aitho.Models.RequestForCourse;
-import com.aitho.Repository.CourseRepository;
-import com.aitho.Service.CourseService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -28,7 +20,7 @@ public class CourseControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    private Course _course = new Course("Materia",90);
+    private final String course = "Materia";
 
     @Test
     public void getAllCoursesTestOkStudent() throws Exception {
@@ -72,7 +64,7 @@ public class CourseControllerTest {
 
     @Test
     public void searchCourseTestOkStudents() throws Exception {
-        this.mockMvc.perform(get("/course/{id}", "60e869c6618c60a4050fe61a")
+        this.mockMvc.perform(get("/course/{id}", "60eda1e0a86cba020d0b45cf")
                 .header("email","pippo")
                 .header("role","Student")
                 .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwaXBwbyJ9.iaOz2RfS9C_lIvjgAOmyfDMlHx3lyFsj5WPZTx83Ft35VyBfoHixLXdFjI0VgfnaTe-IWaoiuDDo2SVYaSbDdA")
@@ -83,7 +75,7 @@ public class CourseControllerTest {
 
     @Test
     public void searchCourseTestOkAdmin() throws Exception {
-        this.mockMvc.perform(get("/course/{id}","60e869c6618c60a4050fe61a")
+        this.mockMvc.perform(get("/course/{id}","60eda1e0a86cba020d0b45cf")
                 .header("email","mario@")
                 .header("role","Admin")
                 .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
@@ -104,7 +96,7 @@ public class CourseControllerTest {
 
     @Test
     public void searchCourseTestForbidden() throws Exception {
-        this.mockMvc.perform(get("/course/{id}","60e869c6618c60a4050fe61a")
+        this.mockMvc.perform(get("/course/{id}","60eda1e0a86cba020d0b45cf")
                 .header("email","pippo")
                 .header("role","Student")
                 .header("token"," ")
@@ -116,8 +108,8 @@ public class CourseControllerTest {
     @Test
     public void addCourseTestBadRequest() throws Exception {
         Course testCourse = new Course("",16);
-        ObjectMapper resultTestStudent = new ObjectMapper();
-        String trueResult = resultTestStudent.writeValueAsString(testCourse);
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(testCourse);
 
         this.mockMvc.perform(post("/course")
                 .header("email","mario@")
@@ -131,8 +123,8 @@ public class CourseControllerTest {
     @Test
     public void deleteCourseTestBadRequest() throws Exception {
         Course testCourse = new Course("",16);
-        ObjectMapper resultTestStudent = new ObjectMapper();
-        String trueResult = resultTestStudent.writeValueAsString(testCourse);
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(testCourse);
 
         this.mockMvc.perform(delete("/course")
                 .header("email","mario@")
@@ -146,8 +138,8 @@ public class CourseControllerTest {
     @Test
     public void addCourseTestOk() throws Exception {
         Course testCourse = new Course("lillo",90);
-        ObjectMapper resultTestStudent = new ObjectMapper();
-        String trueResult = resultTestStudent.writeValueAsString(testCourse);
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(testCourse);
 
         this.mockMvc.perform(post("/course")
                 .header("email","mario@")
@@ -160,14 +152,11 @@ public class CourseControllerTest {
 
     @Test
     public void deleteCourseTestOk() throws Exception {
-        ObjectMapper resultTestStudent = new ObjectMapper();
-        String trueResult = resultTestStudent.writeValueAsString(_course);
-
         this.mockMvc.perform(delete("/course")
                 .header("email","mario@")
                 .header("role","Admin")
                 .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
-                .contentType(MediaType.APPLICATION_JSON).content(trueResult))
+                .contentType(MediaType.APPLICATION_JSON).content("lillo"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -176,8 +165,8 @@ public class CourseControllerTest {
     @Test
     public void addCourseTestNotAcceptable() throws Exception {
         Course testCourse = new Course("Informatica",16);
-        ObjectMapper resultTestStudent = new ObjectMapper();
-        String trueResult = resultTestStudent.writeValueAsString(testCourse);
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(testCourse);
 
         this.mockMvc.perform(post("/course")
                 .header("email","mario@")
@@ -191,8 +180,8 @@ public class CourseControllerTest {
     @Test
     public void addCourseTestForbidden() throws Exception {
         Course testCourse = new Course("Informatica",16);
-        ObjectMapper resultTestStudent = new ObjectMapper();
-        String trueResult = resultTestStudent.writeValueAsString(testCourse);
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(testCourse);
 
         this.mockMvc.perform(post("/course")
                 .header("email","mario@")
@@ -206,8 +195,8 @@ public class CourseControllerTest {
     @Test
     public void deleteCourseTestForbidden() throws Exception {
         Course testCourse = new Course("Informatica",16);
-        ObjectMapper resultTestStudent = new ObjectMapper();
-        String trueResult = resultTestStudent.writeValueAsString(testCourse);
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(testCourse);
 
         this.mockMvc.perform(delete("/course")
                 .header("email","mario@")
@@ -231,7 +220,7 @@ public class CourseControllerTest {
 
     @Test
     public void updateCourseCFUTestOkAdmin() throws Exception {
-        this.mockMvc.perform(put("/course/{id}","60ebf9b3f5003101aa94032f")
+        this.mockMvc.perform(put("/course/{id}","60e870d43281d272fbc6c4d2")
                 .header("email","mario@")
                 .header("role","Admin")
                 .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
@@ -253,7 +242,7 @@ public class CourseControllerTest {
 
     @Test
     public void updateCourseCFUTestForbidden() throws Exception {
-        this.mockMvc.perform(put("/course/{id}","60e869c6618c60a4050fe61a")
+        this.mockMvc.perform(put("/course/{id}","60e870d43281d272fbc6c4d2")
                 .header("email","m.p@gmail.com")
                 .header("role","Teacher")
                 .header("token","")
@@ -264,7 +253,7 @@ public class CourseControllerTest {
 
     @Test
     public void getStudentsCourseTestBadRequest() throws Exception {
-        this.mockMvc.perform(get("/course/students","")
+        this.mockMvc.perform(get("/course/student","")
                 .header("email","mario@")
                 .header("role","Admin")
                 .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
@@ -275,7 +264,7 @@ public class CourseControllerTest {
 
     @Test
     public void getStudentsCourseTestNotFound() throws Exception {
-        this.mockMvc.perform(get("/course/students","noName")
+        this.mockMvc.perform(get("/course/student","noName")
                 .header("email","mario@")
                 .header("role","Admin")
                 .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
@@ -286,7 +275,7 @@ public class CourseControllerTest {
 
     @Test
     public void getStudentsCourseTestOk() throws Exception {
-        this.mockMvc.perform(get("/course/students/{nameCourse}","Informatica")
+        this.mockMvc.perform(get("/course/student/{nameCourse}","Informatica")
                 .header("email","mario@")
                 .header("role","Admin")
                 .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
@@ -297,7 +286,7 @@ public class CourseControllerTest {
 
     @Test
     public void getStudentsCourseTestForbidden() throws Exception {
-        this.mockMvc.perform(get("/course/students","Informatica")
+        this.mockMvc.perform(get("/course/student","Informatica")
                 .header("email","mario@")
                 .header("role","Admin")
                 .header("token","")
@@ -308,7 +297,7 @@ public class CourseControllerTest {
 
     @Test
     public void getTeachersCourseTestForbidden() throws Exception {
-        this.mockMvc.perform(get("/course/teachers/{nameCourse}","Informatica")
+        this.mockMvc.perform(get("/course/teacher/{nameCourse}","Informatica")
                 .header("email","mario@")
                 .header("role","Admin")
                 .header("token","")
@@ -319,7 +308,7 @@ public class CourseControllerTest {
 
     @Test
     public void getTeachersCourseTestOk() throws Exception {
-        this.mockMvc.perform(get("/course/teachers/{nameCourse}","Informatica")
+        this.mockMvc.perform(get("/course/teacher/{nameCourse}","Informatica")
                 .header("email","mario@")
                 .header("role","Admin")
                 .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
@@ -330,7 +319,7 @@ public class CourseControllerTest {
 
     @Test
     public void getTeachersCourseTestNotFound() throws Exception {
-        this.mockMvc.perform(get("/course/students/{nameCourse}","noName")
+        this.mockMvc.perform(get("/course/student/{nameCourse}","noName")
                 .header("email","mario@")
                 .header("role","Admin")
                 .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
@@ -341,7 +330,7 @@ public class CourseControllerTest {
 
     @Test
     public void getTeachersCourseTestBadRequest() throws Exception {
-        this.mockMvc.perform(get("/course/teachers","")
+        this.mockMvc.perform(get("/course/teacher","")
                 .header("email","mario@")
                 .header("role","Admin")
                 .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")
@@ -352,11 +341,11 @@ public class CourseControllerTest {
 
     @Test
     public void addStudentInCourseTestBadRequestNameCourse() throws Exception {
-        RequestForCourse requestForCourse = new RequestForCourse(_course, "pippo");
-        ObjectMapper resultTest = new ObjectMapper();
-        String trueResult = resultTest.writeValueAsString(requestForCourse);
+        RequestForCourse requestForCourse = new RequestForCourse(course, "");
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(requestForCourse);
 
-        this.mockMvc.perform(post("/course/students/{nameCourse}")
+        this.mockMvc.perform(post("/course/student")
                 .header("email", "mario@")
                 .header("role", "Admin")
                 .header("token", "")
@@ -368,9 +357,9 @@ public class CourseControllerTest {
 
     @Test
     public void addStudentInCourseTestBadRequestMailStudent() throws Exception {
-        RequestForCourse requestForCourse = new RequestForCourse(_course, "");
-        ObjectMapper resultTest = new ObjectMapper();
-        String trueResult = resultTest.writeValueAsString(requestForCourse);
+        RequestForCourse requestForCourse = new RequestForCourse(course, "");
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(requestForCourse);
         this.mockMvc.perform(post("/course/students")
                 .header("email", "mario@")
                 .header("role", "Admin")
@@ -383,9 +372,9 @@ public class CourseControllerTest {
 
     @Test
     public void addStudentInCourseTestNotFoundCourse() throws Exception {
-        RequestForCourse requestForCourse = new RequestForCourse(_course,"pippo");
-        ObjectMapper resultTest = new ObjectMapper();
-        String trueResult = resultTest.writeValueAsString(requestForCourse);
+        RequestForCourse requestForCourse = new RequestForCourse(course,"pippo");
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(requestForCourse);
         this.mockMvc.perform(post("/course/students")
                 .header("email","mario@")
                 .header("role","Admin")
@@ -398,9 +387,9 @@ public class CourseControllerTest {
 
     @Test
     public void addStudentInCourseTestNotFoundStudents() throws Exception {
-        RequestForCourse requestForCourse = new RequestForCourse(_course,"nonesiste");
-        ObjectMapper resultTest = new ObjectMapper();
-        String trueResult = resultTest.writeValueAsString(requestForCourse);
+        RequestForCourse requestForCourse = new RequestForCourse(course,"nonesiste");
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(requestForCourse);
         this.mockMvc.perform(post("/course/students")
                 .header("email","mario@")
                 .header("role","Admin")
@@ -413,9 +402,9 @@ public class CourseControllerTest {
 
     @Test
     public void addStudentInCourseTestOk() throws Exception {
-        RequestForCourse requestForCourse = new RequestForCourse(_course,"pippo");
-        ObjectMapper resultTest = new ObjectMapper();
-        String trueResult = resultTest.writeValueAsString(requestForCourse);
+        RequestForCourse requestForCourse = new RequestForCourse(course,"pippo");
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(requestForCourse);
 
         this.mockMvc.perform(post("/course/students")
                 .header("email","mario@")
@@ -428,7 +417,7 @@ public class CourseControllerTest {
 
     @Test
     public void addStudentInCourseTestForbidden() throws Exception {
-        RequestForCourse requestForCourse = new RequestForCourse(_course,"pippo");
+        RequestForCourse requestForCourse = new RequestForCourse(course,"pippo");
         ObjectMapper resultTest = new ObjectMapper();
         String trueResult = resultTest.writeValueAsString(requestForCourse);
 
@@ -443,9 +432,9 @@ public class CourseControllerTest {
 
     @Test
     public void deleteStudentInCourseTestOk() throws Exception {
-        RequestForCourse requestForCourse = new RequestForCourse(_course,"pippo");
-        ObjectMapper resultTest = new ObjectMapper();
-        String trueResult = resultTest.writeValueAsString(requestForCourse);
+        RequestForCourse requestForCourse = new RequestForCourse(course,"pippo");
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(requestForCourse);
 
         this.mockMvc.perform(delete("/course/students")
                 .header("email","mario@")
@@ -459,9 +448,9 @@ public class CourseControllerTest {
 
     @Test
     public void deleteStudentInCourseTestBadRequestCourse() throws Exception {
-        RequestForCourse requestForCourse = new RequestForCourse(_course,"pippo");
-        ObjectMapper resultTest = new ObjectMapper();
-        String trueResult = resultTest.writeValueAsString(requestForCourse);
+        RequestForCourse requestForCourse = new RequestForCourse(course,"pippo");
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(requestForCourse);
 
         this.mockMvc.perform(delete("/course/students")
                 .header("email","mario@")
@@ -474,9 +463,9 @@ public class CourseControllerTest {
 
     @Test
     public void deleteStudentInCourseTestBadRequestMail() throws Exception {
-        RequestForCourse requestForCourse = new RequestForCourse(_course,"");
-        ObjectMapper resultTest = new ObjectMapper();
-        String trueResult = resultTest.writeValueAsString(requestForCourse);
+        RequestForCourse requestForCourse = new RequestForCourse(course,"");
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(requestForCourse);
 
         this.mockMvc.perform(delete("/course/students")
                 .header("email","mario@")
@@ -490,9 +479,9 @@ public class CourseControllerTest {
 
     @Test
     public void deleteStudentInCourseTestForbidden() throws Exception {
-        RequestForCourse requestForCourse = new RequestForCourse(_course, "pippo");
-        ObjectMapper resultTest = new ObjectMapper();
-        String trueResult = resultTest.writeValueAsString(requestForCourse);
+        RequestForCourse requestForCourse = new RequestForCourse(course, "pippo");
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(requestForCourse);
         this.mockMvc.perform(delete("/course/students")
             .header("email","mario@")
             .header("role","Admin")
@@ -504,9 +493,9 @@ public class CourseControllerTest {
 
     @Test
     public void addTeacherInCourseTestOK() throws Exception {
-        RequestForCourse requestForCourse = new RequestForCourse(_course, "m.p@gmail.com");
-        ObjectMapper resultTest = new ObjectMapper();
-        String trueResult = resultTest.writeValueAsString(requestForCourse);
+        RequestForCourse requestForCourse = new RequestForCourse(course, "m.p@gmail.com");
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(requestForCourse);
 
         this.mockMvc.perform(post("/course/teachers")
                 .header("email", "mario@")
@@ -519,9 +508,9 @@ public class CourseControllerTest {
 
     @Test
     public void addTeacherInCourseTestForbidden() throws Exception {
-        RequestForCourse requestForCourse = new RequestForCourse(_course, "m.p@gmail.com");
-        ObjectMapper resultTest = new ObjectMapper();
-        String trueResult = resultTest.writeValueAsString(requestForCourse);
+        RequestForCourse requestForCourse = new RequestForCourse(course, "m.p@gmail.com");
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(requestForCourse);
 
         this.mockMvc.perform(post("/course/teachers")
                 .header("email", "mario@")
@@ -534,9 +523,9 @@ public class CourseControllerTest {
 
     @Test
     public void addTeacherInCourseTestBadRequest() throws Exception {
-        RequestForCourse requestForCourse = new RequestForCourse(_course, "");
-        ObjectMapper resultTest = new ObjectMapper();
-        String trueResult = resultTest.writeValueAsString(requestForCourse);
+        RequestForCourse requestForCourse = new RequestForCourse(course, "");
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(requestForCourse);
 
         this.mockMvc.perform(post("/course/teachers")
                 .header("email", "mario@")
@@ -549,9 +538,9 @@ public class CourseControllerTest {
 
     @Test
     public void addTeacherInCourseTestNotFoundMail() throws Exception {
-        RequestForCourse requestForCourse = new RequestForCourse(_course, "nn");
-        ObjectMapper resultTest = new ObjectMapper();
-        String trueResult = resultTest.writeValueAsString(requestForCourse);
+        RequestForCourse requestForCourse = new RequestForCourse(course, "nn");
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(requestForCourse);
 
         this.mockMvc.perform(post("/course/teachers")
                 .header("email", "mario@")
@@ -564,9 +553,9 @@ public class CourseControllerTest {
 
     @Test
     public void deleteTeacherInCourseTestNotFoundMail() throws Exception {
-        RequestForCourse requestForCourse = new RequestForCourse(_course, "nn");
-        ObjectMapper resultTest = new ObjectMapper();
-        String trueResult = resultTest.writeValueAsString(requestForCourse);
+        RequestForCourse requestForCourse = new RequestForCourse(course, "nn");
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(requestForCourse);
 
         this.mockMvc.perform(delete("/course/teachers")
                 .header("email", "mario@")
@@ -579,9 +568,9 @@ public class CourseControllerTest {
 
     @Test
     public void deleteTeacherInCourseTestBadRequest() throws Exception {
-        RequestForCourse requestForCourse = new RequestForCourse(_course, "");
-        ObjectMapper resultTest = new ObjectMapper();
-        String trueResult = resultTest.writeValueAsString(requestForCourse);
+        RequestForCourse requestForCourse = new RequestForCourse(course, "");
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(requestForCourse);
 
         this.mockMvc.perform(delete("/course/teachers")
                 .header("email", "mario@")
@@ -594,9 +583,9 @@ public class CourseControllerTest {
 
     @Test
     public void deleteTeacherInCourseTestForbidden() throws Exception {
-        RequestForCourse requestForCourse = new RequestForCourse(_course, "m.p@gmail.com");
-        ObjectMapper resultTest = new ObjectMapper();
-        String trueResult = resultTest.writeValueAsString(requestForCourse);
+        RequestForCourse requestForCourse = new RequestForCourse(course, "m.p@gmail.com");
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(requestForCourse);
 
         this.mockMvc.perform(delete("/course/teachers")
                 .header("email", "mario@")
@@ -609,9 +598,9 @@ public class CourseControllerTest {
 
     @Test
     public void deleteTeacherInCourseTestOK() throws Exception {
-        RequestForCourse requestForCourse = new RequestForCourse(_course, "m.p@gmail.com");
-        ObjectMapper resultTest = new ObjectMapper();
-        String trueResult = resultTest.writeValueAsString(requestForCourse);
+        RequestForCourse requestForCourse = new RequestForCourse(course, "m.p@gmail.com");
+        ObjectMapper resultTestCourse = new ObjectMapper();
+        String trueResult = resultTestCourse.writeValueAsString(requestForCourse);
 
         this.mockMvc.perform(delete("/course/teachers")
                 .header("email", "mario@")
