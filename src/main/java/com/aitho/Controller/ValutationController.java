@@ -1,7 +1,8 @@
 package com.aitho.Controller;
 
 import com.aitho.Models.*;
-import com.aitho.Repository.ValutationRepository;
+import com.aitho.Repository.TeacherRepository;
+import com.aitho.Service.CheckController;
 import com.aitho.Service.StudentService;
 import com.aitho.Service.ValutationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,37 +18,52 @@ public class ValutationController {
 
     private final ValutationService valutationService;
     private final StudentService studentService;
+    private final CheckController checkController;
+    private final TeacherRepository teacherRepository;
+
     @Autowired
-    public ValutationController(ValutationService valutationService, StudentService studentService) {
+    public ValutationController(ValutationService valutationService, StudentService studentService, CheckController checkController, TeacherRepository teacherRepository) {
         this.valutationService = valutationService;
         this.studentService = studentService;
+        this.checkController = checkController;
+        this.teacherRepository = teacherRepository;
     }
 
-    @GetMapping("/valutations")
-    public List<Valutation> getAllValutations() { return valutationService.getAllValutations(); }
-
-    @GetMapping("/valutations/student")
-    public List<Valutation> getStudentValutations(@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
-        if(Role.valueOf(role) == Role.Student) {
-            Optional<Students> authStudent = studentService.searchStudentByEmail(email);
-            if(authStudent.isPresent() && authStudent.get().getToken().equals(token)){
-                return  valutationService.getStudentValutations(authStudent.get().getId());
-            }
+    @GetMapping("/valutations") //Testata
+    public ResponseEntity<List<Valutation>> getAllValutations(@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        if ( checkController.checkLoginAdmin(email,role,token) ) {
+            return new ResponseEntity<>(valutationService.getAllValutations(),HttpStatus.OK);
         }
-        return  null;
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+
+    @GetMapping("/valutations/student") //Testata
+    public ResponseEntity<List<Valutation>> getValutationsOfStudents(@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        if( checkController.checkLoginStudent(email,role,token) ) {
+            Optional<Students> authStudent = studentService.searchStudentByEmail(email);
+            return authStudent.map(students -> new ResponseEntity<>(valutationService.getStudentValutations(students.getId()), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @GetMapping("/valutations/teacher/{id}")
-    public List<Valutation> getTeacherValutations(@PathVariable("id") String id) { return  valutationService.getTeacherValutations(id); }
+    public ResponseEntity<List<Valutation>> getTeacherValutations(@PathVariable("id") String id,@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        if (id.isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
+        if (teacherRepository.findById(id).isEmpty()) { return new ResponseEntity<>(HttpStatus.NOT_FOUND); }
+        if( checkController.checkLoginTeacher(email,role,token) ) {
+            return new ResponseEntity<>(valutationService.getTeacherValutations(id),HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
 
     @GetMapping("/valutations/course/{id}")
     public List<Valutation> getCourseValutations(@PathVariable("id") String id) { return  valutationService.getCourseValutations(id); }
 
-    @PostMapping(path = "/valutations",consumes = "application/json")
-    public ResponseEntity<Valutation> addValutation(@RequestBody Valutation valutation) {
-
-        return valutationService.addValutation(valutation);
-    }
+//    @PostMapping(path = "/valutations",consumes = "application/json")
+//    public ResponseEntity<Valutation> addValutation(@RequestBody Valutation valutation) {
+//
+////        return valutationService.addValutation(valutation);
+//    }
 
     @PutMapping(path = "/valutation/{id}",consumes = "application/json")
     public ResponseEntity<Valutation> updateValutation (@PathVariable("id") String id, @RequestBody Valutation valutation) {

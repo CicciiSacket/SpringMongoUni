@@ -39,20 +39,20 @@ public class ValutationService {
 
     public List<Valutation> getCourseValutations(String id){return valutationRepository.findCourseValutations(id);}
 
-    public ResponseEntity<Valutation> addValutation(@RequestBody Valutation valutation) {
-        try{
-            Optional<Course> course = Optional.ofNullable(courseService.findCourseById(valutation.getId_course()));
-            Boolean teacher = teacherService.existTeacherById(valutation.getId_teacher());
-            Boolean student = studentService.existStudentById(valutation.getId_student());
-            if ( course.isPresent() && teacher && student){
-                valutationRepository.save(valutation);
-                return new ResponseEntity<>(valutation, HttpStatus.CREATED);
-            }
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }catch (Exception e ){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    public void addValutation(@RequestBody Valutation valutation) {
+//        try{
+//            Optional<Course> course = Optional.ofNullable(courseService.findCourseById(valutation.getId_course()));
+//            Boolean teacher = teacherService.existTeacherById(valutation.getId_teacher());
+//            Boolean student = studentService.existStudentById(valutation.getId_student());
+//            if ( course.isPresent() && teacher && student){
+//                valutationRepository.save(valutation);
+//                return new ResponseEntity<>(valutation, HttpStatus.CREATED);
+//            }
+//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }catch (Exception e ){
+//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
     public ResponseEntity<Valutation> updateValutation(@PathVariable("id") String id, @RequestBody Valutation valutation) {
         Optional<Valutation> valutationUpgrade = valutationRepository.findById(id);
