@@ -7,8 +7,3 @@ export interface Student {
     role: string,
     token: string
 }
-
-
-export interface StudentRes{
-    token: string,
-}

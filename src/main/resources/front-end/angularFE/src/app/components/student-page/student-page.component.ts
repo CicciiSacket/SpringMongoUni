@@ -1,11 +1,14 @@
+
 import { Component, OnInit } from '@angular/core';
-import { Valutation, MappedValutation } from 'src/app/interface/valutations';
 import { StudentService } from 'src/app/services/student.service';
 import { CourseService } from 'src/app/services/course.service';
-import { Course } from 'src/app/interface/course';
-import { TeacherRes, MappedTeacher } from 'src/app/interface/teacher';
 import { DataShareService } from 'src/app/services/data-share.service';
 import { TeacherService } from 'src/app/services/teacher.service';
+import { ValutationService } from 'src/app/services/valutation.service';
+import { Valutation, MappedValutation } from 'src/app/interface/valutations';
+import { MappedTeacher } from 'src/app/interface/teacher';
+import { Course } from 'src/app/interface/course';
+
 
 @Component({
   selector: 'app-student-page',
@@ -21,6 +24,7 @@ export class StudentPageComponent implements OnInit {
       private studentService: StudentService, 
       private courseService: CourseService, 
       private teacherService: TeacherService,
+      private valutationService: ValutationService,
       private dataShareService: DataShareService
     ){}
 
@@ -29,7 +33,7 @@ export class StudentPageComponent implements OnInit {
   }
 
   private getValutations = () => {
-    this.studentService.getStudentValutations().then(valutations =>{
+    this.valutationService.getStudentValutations().then(valutations =>{
       this.dataShareService.isUserLoggedIn.next(true);
       if (valutations.length > 0 ){
         this.valutations = valutations;

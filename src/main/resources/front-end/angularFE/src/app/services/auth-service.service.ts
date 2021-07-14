@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Student, StudentRes } from '../interface/student';
+import { Student } from '../interface/student';
 import { LoginRes } from '../interface/auth';
 import { Teacher } from '../interface/teacher';
 import { Router } from '@angular/router';

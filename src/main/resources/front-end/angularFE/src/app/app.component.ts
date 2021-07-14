@@ -1,7 +1,4 @@
 import { Component } from '@angular/core';
-import { Student, StudentRes } from './interface/student';
-import { StudentService } from './services/student.service'
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -10,9 +7,7 @@ import { StudentService } from './services/student.service'
 export class AppComponent {
   title = 'angularFE';
 
-  studentsList: Student[] | undefined;
-
-  constructor(private studentService: StudentService){
+  constructor(){
    
   }
 
