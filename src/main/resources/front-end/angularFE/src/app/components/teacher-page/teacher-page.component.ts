@@ -1,6 +1,10 @@
 import { ViewEncapsulation } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { Course } from 'src/app/interface/course';
+import { Student } from 'src/app/interface/student';
+import { CourseService } from 'src/app/services/course.service';
+import { StudentService } from 'src/app/services/student.service';
 
 @Component({
   selector: 'app-teacher-page',
@@ -13,32 +17,7 @@ export class TeacherPageComponent implements OnInit {
   public selectedStudent: string = "";
   public indexOfCourse: number = 0;
   public vote: number = 0;
-  public courses = [
-    {
-      id: "id1",
-      name:"name1",
-      CFU: 10,
-      students:[
-        {
-          id:"id1student",
-          name: "namestudent1",
-          surname: "surnamestudent1"
-        }
-      ]
-    },
-    {
-      id: "id2",
-      name:"name2",
-      CFU: 20,
-      students:[
-        {
-          id:"id2student",
-          name: "namestudent2",
-          surname: "surnamestudent2"
-        }
-      ]
-    }
-];
+  public courses: Course[] = [];
 
 voteValidation = new FormControl('', [Validators.required, Validators.min(0), Validators.max(30)]);
   getErrorMessage() {
@@ -48,9 +27,12 @@ voteValidation = new FormControl('', [Validators.required, Validators.min(0), Va
     return this.voteValidation.hasError('min') ? 'Il valore minimo è di 0' : 'Il valore massimo è di 30';
   }
 
-  constructor() { }
+  constructor(private courseService: CourseService, private studentService: StudentService) { }
 
   ngOnInit(): void {
+    this.courseService.getCoursesByTeacherEmail(localStorage.getItem('email')!).then(coursesResponse => {
+      this.courses = coursesResponse;
+    })
   }
 
   postValutation(): void{

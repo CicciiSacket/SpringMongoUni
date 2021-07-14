@@ -15,8 +15,8 @@
             <mat-form-field *ngIf="selectedCourse >= 0">
                 <mat-select placeholder="Selezione studente" [(value)]="selectedStudent">
                     <mat-option>None</mat-option>
-                    <mat-option *ngFor="let student of courses[selectedCourse].students" [value]="student.id">
-                        {{student.name}}
+                    <mat-option *ngFor="let student of courses[selectedCourse].teachersId" [value]="student">
+                        {{student}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
