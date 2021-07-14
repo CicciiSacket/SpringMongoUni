@@ -1,5 +1,6 @@
 package com.aitho.Controller;
 
+import com.aitho.Models.Course;
 import com.aitho.Models.Students;
 import com.aitho.Repository.StudentsRepository;
 import com.aitho.Service.AdminService;
@@ -85,6 +86,15 @@ public class StudentsController {
                 return new ResponseEntity<>(HttpStatus.OK);
             }
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+
+    @GetMapping("/student/search")
+    public ResponseEntity<List<Students>> searchFromListID(@RequestHeader List<String> id, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        if (id.isEmpty()) { return new ResponseEntity<>(HttpStatus.NOT_FOUND); }
+        if (checkController.checkLoginAdmin(email,role,token)){
+            return new ResponseEntity<>(studentService.getStudentFromIdList(id), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
