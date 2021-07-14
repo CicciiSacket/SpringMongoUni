@@ -20,7 +20,7 @@ public class CourseControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    private final String course = "Materia";
+    private final String course = "Informatica";
 
     @Test
     public void getAllCoursesTestOkStudent() throws Exception {
@@ -493,11 +493,11 @@ public class CourseControllerTest {
 
     @Test
     public void addTeacherInCourseTestOK() throws Exception {
-        RequestForCourse requestForCourse = new RequestForCourse(course, "m.p@gmail.com");
+        RequestForCourse requestForCourse = new RequestForCourse("Informatica", "m.p@gmail.com");
         ObjectMapper resultTestCourse = new ObjectMapper();
         String trueResult = resultTestCourse.writeValueAsString(requestForCourse);
 
-        this.mockMvc.perform(post("/course/teachers")
+        this.mockMvc.perform(post("/course/teacher")
                 .header("email", "mario@")
                 .header("role", "Admin")
                 .header("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpb0AifQ.oA34y9uyA6UThvMx7aQiH6dqsFW9lVSq-U7PgHM7P1_FUT67YX7rFFktzUyN61_VXfHUuHgLbphndm9P5Ve_PA")

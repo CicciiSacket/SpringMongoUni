@@ -1,7 +1,10 @@
 package com.aitho.Controller;
 
 import com.aitho.Models.*;
+import com.aitho.Repository.CourseRepository;
+import com.aitho.Repository.StudentsRepository;
 import com.aitho.Repository.TeacherRepository;
+import com.aitho.Repository.ValutationRepository;
 import com.aitho.Service.CheckController;
 import com.aitho.Service.StudentService;
 import com.aitho.Service.ValutationService;
@@ -17,14 +20,20 @@ import java.util.Optional;
 public class ValutationController {
 
     private final ValutationService valutationService;
+    private final ValutationRepository valutationRepository;
     private final StudentService studentService;
+    private final StudentsRepository studentsRepository;
+    private final CourseRepository courseRepository;
     private final CheckController checkController;
     private final TeacherRepository teacherRepository;
 
     @Autowired
-    public ValutationController(ValutationService valutationService, StudentService studentService, CheckController checkController, TeacherRepository teacherRepository) {
+    public ValutationController(ValutationService valutationService, ValutationRepository valutationRepository, StudentService studentService, StudentsRepository studentsRepository, CourseRepository courseRepository, CheckController checkController, TeacherRepository teacherRepository) {
         this.valutationService = valutationService;
+        this.valutationRepository = valutationRepository;
         this.studentService = studentService;
+        this.studentsRepository = studentsRepository;
+        this.courseRepository = courseRepository;
         this.checkController = checkController;
         this.teacherRepository = teacherRepository;
     }
@@ -46,24 +55,36 @@ public class ValutationController {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @GetMapping("/valutations/teacher/{id}")
-    public ResponseEntity<List<Valutation>> getTeacherValutations(@PathVariable("id") String id,@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
-        if (id.isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
-        if (teacherRepository.findById(id).isEmpty()) { return new ResponseEntity<>(HttpStatus.NOT_FOUND); }
+    @GetMapping("/valutations/teacher") //Testata
+    public ResponseEntity<List<Valutation>> getValutationOfTeacher(@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
         if( checkController.checkLoginTeacher(email,role,token) ) {
-            return new ResponseEntity<>(valutationService.getTeacherValutations(id),HttpStatus.OK);
+            Optional<Teacher> authTeacher = teacherRepository.findTeacherByEmail(email);
+            return authTeacher.map(teacher -> new ResponseEntity<>(valutationService.getTeacherValutations(teacher.getId()), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @GetMapping("/valutations/course/{id}")
-    public List<Valutation> getCourseValutations(@PathVariable("id") String id) { return  valutationService.getCourseValutations(id); }
+    @GetMapping("/valutations/course/{id}") //Testata
+    public ResponseEntity<List<Valutation>> getValutationsOfCourse(@PathVariable("id") String idCourse,@RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        if( checkController.checkLoginTeacher(email,role,token) || checkController.checkLoginAdmin(email,role,token) ) {
+            Optional<Course> authCourse = courseRepository.findCourseById(idCourse);
+            return authCourse.map(course -> new ResponseEntity<>(valutationService.getCourseValutations(course.getId()), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
 
-//    @PostMapping(path = "/valutations",consumes = "application/json")
-//    public ResponseEntity<Valutation> addValutation(@RequestBody Valutation valutation) {
-//
-////        return valutationService.addValutation(valutation);
-//    }
+    @PostMapping(path = "/valutations",consumes = "application/json", produces =  "application/json") //testata
+    public ResponseEntity<HttpStatus> addValutation(@RequestBody Valutation valutation, @RequestHeader(value="email") String email, @RequestHeader(value="role") String role, @RequestHeader(value="token") String token) {
+        if (valutationRepository.findByIdStudVal(valutation.getId_student()).isPresent() && valutationRepository.findByIdStudVal(valutation.getId_student()).get().getId_student().equals(valutation.getId_student())) { return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE); }
+        if (courseRepository.existsById(valutation.getId_course()) || teacherRepository.existsById(valutation.getId_teacher()) || studentsRepository.existsById(valutation.getId_student())) {
+            if( checkController.checkLoginTeacher(email,role,token) || checkController.checkLoginAdmin(email,role,token) ){
+                valutationService.addValutation(valutation);
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            }
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
     @PutMapping(path = "/valutation/{id}",consumes = "application/json")
     public ResponseEntity<Valutation> updateValutation (@PathVariable("id") String id, @RequestBody Valutation valutation) {

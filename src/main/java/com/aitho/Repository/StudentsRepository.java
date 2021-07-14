@@ -13,4 +13,6 @@ public interface StudentsRepository extends MongoRepository< Students,String > {
     @Query("{email : ?0}")
     Optional<Students> findStudentByEmail(String email);
 
+    @Query("{id : ?0}")
+    Optional<Students> findStudentById(String id);
 };
