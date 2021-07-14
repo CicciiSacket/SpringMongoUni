@@ -1,7 +1,7 @@
 export interface Course {    
     id: string;
     name: string;
-    CFU: number;
-    studentsId: String[];
-    teachersId: String[];
+    cfu: number;
+    studentsId: string[];
+    teachersId: string[];
 }

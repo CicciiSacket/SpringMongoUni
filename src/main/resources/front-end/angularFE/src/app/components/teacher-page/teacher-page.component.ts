@@ -13,33 +13,41 @@ import { StudentService } from 'src/app/services/student.service';
   encapsulation: ViewEncapsulation.None
 })
 export class TeacherPageComponent implements OnInit {
-  public selectedCourse: number = -1;
   public selectedStudent: string = "";
   public indexOfCourse: number = 0;
-  public vote: number = 0;
   public courses: Course[] = [];
-
-voteValidation = new FormControl('', [Validators.required, Validators.min(0), Validators.max(30)]);
-  getErrorMessage() {
-    if (this.voteValidation.hasError('required')) {
-      return 'Inserisci un voto';
-    }
-    return this.voteValidation.hasError('min') ? 'Il valore minimo è di 0' : 'Il valore massimo è di 30';
-  }
-
-  constructor(private courseService: CourseService, private studentService: StudentService) { }
-
+  public students : Student[] = [];
   ngOnInit(): void {
     this.courseService.getCoursesByTeacherEmail(localStorage.getItem('email')!).then(coursesResponse => {
       this.courses = coursesResponse;
     })
   }
 
+  constructor(private courseService: CourseService, private studentService: StudentService) { }
+
+  voteValidation = new FormControl('', [Validators.required, Validators.min(0)]);
+  getErrorMessage() {
+    if (this.voteValidation.hasError('required')) {
+      return 'Inserisci un voto';
+    }
+    return this.voteValidation.hasError('min') ? 'Il valore minimo è di 0' : 'Il valore massimo è di '+this.voteValidation.getError("max").max;
+  }
+
+  selectCourse(event: number){
+    if(event >= 0){
+      this.indexOfCourse = event;
+      this.voteValidation.setValidators(Validators.max(this.courses[event].cfu))
+      this.studentService.getStudentsFromIdList(this.courses[event].studentsId).then(studentsResponse => {
+        this.students = studentsResponse;
+      })
+    }else this.students = []
+  }
+
   postValutation(): void{
-    // if(this.courses[this.selectedCourse] && 
-    //   (this.courses[this.selectedCourse].CFU > this.vote && this.courses[this.selectedCourse].CFU >= 0) &&
-    //   this.courses[this.selectedCourse].students.find(student => student.id == this.selectedStudent)
-    //   )
+    // if(this.courses[this.indexOfCourse] && 
+    //   (this.courses[this.indexOfCourse].cfu >= this.voteValidation.value && this.courses[this.indexOfCourse].cfu >= 0) &&
+    //   this.courses[this.indexOfCourse].studentsId.find(student => student == this.selectedStudent)
+    //   ){}
 
   }
 }

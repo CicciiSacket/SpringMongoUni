@@ -27,6 +27,13 @@ export class StudentService {
     return []
   }
 
+  getStudentsFromIdList = async (id: string[]): Promise<Student[]> => {
+    const token = (localStorage.getItem("token") ? localStorage.getItem("token")! : "");
+    const email = (localStorage.getItem("email") ? localStorage.getItem("email")! : "");
+    const role = (localStorage.getItem("role") ? localStorage.getItem("role")! : "");
+    return await this.client.get(this.uriStudent + "/search", {headers: { id, email, token, role }} ).toPromise() as Promise<Student[]>
+  }
+
 
   
 }
