@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class RequestForCourse {
 
-    private Course course;
+    //private Course course;
+    private String courseName;
     private String mail;
 }
